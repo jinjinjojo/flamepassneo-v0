@@ -1,5 +1,5 @@
-import config from '../config';
-import getSessionId from '../util/getSessionId';
+import config from '../config.js';
+import getSessionId from '../util/getSessionId.js';
 
 /**
  * @param {import('../classes/RammerheadProxy')} proxyServer

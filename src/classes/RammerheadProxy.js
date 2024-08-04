@@ -3,26 +3,29 @@ import https from 'https';
 import stream from 'stream';
 import fs from 'fs';
 import path from 'path';
-import { getPathname } from 'testcafe-hammerhead/lib/utils/url';
-import { Proxy } from 'testcafe-hammerhead';
+import { getPathname } from 'testcafe-hammerhead/lib/utils/url.js';
 import WebSocket from 'ws';
-import httpResponse from '../util/httpResponse';
-import streamToString from '../util/streamToString';
-import URLPath from '../util/URLPath';
-import RammerheadLogging from '../classes/RammerheadLogging';
+import httpResponse from '../util/httpResponse.js';
+import streamToString from '../util/streamToString.js';
+import URLPath from '../util/URLPath.js';
+import RammerheadLogging from '../classes/RammerheadLogging.js';
 import RammerheadJSMemCache from './RammerheadJSMemCache.js';
+import pkg from 'testcafe-hammerhead'
+const { Proxy } = pkg;
+import jsDiskCache from '../util/addJSDiskCache.js';
 
-import('../util/fixCorsHeader');
+import('../util/fixCorsHeader.js');
 import('../util/fixCorsMissingOriginHeader.js');
-import('../util/fixWebsocket');
-import('../util/addMoreErrorGuards');
-import('../util/addUrlShuffling');
-import('../util/patchAsyncResourceProcessor');
+import('../util/fixWebsocket.js');
+import('../util/addMoreErrorGuards.js');
+import('../util/addUrlShuffling.js');
+import('../util/patchAsyncResourceProcessor.js');
 let addJSDiskCache = function (jsCache) {
-    require('../util/addJSDiskCache')(jsCache);
+    jsDiskCache(jsCache);
     // modification only works once
     addJSDiskCache = () => { };
 };
+
 
 /**
  * taken directly from
@@ -453,7 +456,7 @@ class RammerheadProxy extends Proxy {
     _setupRammerheadServiceRoutes() {
         this.GET('/rammerhead.js', {
             content: fs.readFileSync(
-                path.join(__dirname, '../client/rammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(import.meta.dirname, '../client/rammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
             ),
             contentType: 'application/x-javascript'
         });
@@ -587,17 +590,17 @@ class RammerheadProxy extends Proxy {
     GET(route, handler) {
         if (route === '/hammerhead.js') {
             handler.content = fs.readFileSync(
-                path.join(__dirname, '../client/hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(import.meta.dirname, '../client/hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
             );
         }
         if (route === '/worker-hammerhead.js') {
             handler.content = fs.readFileSync(
-                path.join(__dirname, '../client/worker-hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(import.meta.dirname, '../client/worker-hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
             );
         }
         if (route === '/transport-worker.js') {
             handler.content = fs.readFileSync(
-                path.join(__dirname, '../client/transport-worker' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(import.meta.dirname, '../client/transport-worker' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
             );
         }
         super.GET(route, handler);

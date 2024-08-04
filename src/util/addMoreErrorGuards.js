@@ -1,7 +1,7 @@
 // handle the additional errors: ERR_INVALID_PROTOCOL and ETIMEDOUT
 // hammerhead handled errors: ECONNRESET, EPIPE (or ECONNABORTED for windows)
 
-import hGuard from 'testcafe-hammerhead/lib/request-pipeline/connection-reset-guard';
+import hGuard from 'testcafe-hammerhead/lib/request-pipeline/connection-reset-guard.js';
 const isConnectionResetError = hGuard.isConnectionResetError;
 hGuard.isConnectionResetError = function (err) {
     // for some reason, ECONNRESET isn't handled correctly
@@ -32,5 +32,6 @@ process.on('uncaughtException', (err) => {
     } else {
         // probably a TypeError or something important
         console.error('About to throw: ' + err.message);
+        throw new Error(err.message);
     }
 });

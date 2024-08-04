@@ -1,6 +1,6 @@
 // fixes unpipe error and crashes resulting from http requests to websocket proxy endpoint
 
-import stages from 'testcafe-hammerhead/lib/request-pipeline/stages';
+import stages from 'testcafe-hammerhead/lib/request-pipeline/stages.js';
 import { Duplex } from 'stream';
 
 stages.unshift(function fixWebsocket(ctx) {
@@ -8,7 +8,7 @@ stages.unshift(function fixWebsocket(ctx) {
 });
 
 // fixes EPIPE error when trying to write head to a closed socket
-import hammerheadWS from 'testcafe-hammerhead/lib/request-pipeline/websocket';
+import hammerheadWS from 'testcafe-hammerhead/lib/request-pipeline/websocket.js';
 const respondOnWebSocket = hammerheadWS.respondOnWebSocket;
 hammerheadWS.respondOnWebSocket = function (ctx) {
     ctx.res.on('error', (err) => {

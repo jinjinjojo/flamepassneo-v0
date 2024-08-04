@@ -1,12 +1,12 @@
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/index.ts
 
 import url from 'url';
-import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page';
-import manifestProcessor from 'testcafe-hammerhead/lib/processing/resources/manifest';
-import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script';
-import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet';
-import urlUtil from 'testcafe-hammerhead/lib/utils/url';
-import { encodeContent, decodeContent } from 'testcafe-hammerhead/lib/processing/encoding';
+import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page.js';
+import manifestProcessor from 'testcafe-hammerhead/lib/processing/resources/manifest.js';
+import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
+import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet.js';
+import urlUtil from 'testcafe-hammerhead/lib/utils/url.js';
+import { encodeContent, decodeContent } from 'testcafe-hammerhead/lib/processing/encoding/index.js';
 import { platform } from 'os';
 
 const IS_WIN = platform() === 'win32';
@@ -42,7 +42,7 @@ function getResourceUrlReplacer(ctx) {
     };
 }
 
-import('testcafe-hammerhead/lib/processing/resources/index').process = async function process(ctx) {
+import('testcafe-hammerhead/lib/processing/resources/index.js').process = async function process(ctx) {
     const { destResBody, contentInfo } = ctx;
     const { encoding, charset } = contentInfo;
 

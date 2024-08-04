@@ -1,5 +1,5 @@
-import transforms from 'testcafe-hammerhead/lib/request-pipeline/header-transforms/transforms';
-import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names';
+import transforms from 'testcafe-hammerhead/lib/request-pipeline/header-transforms/transforms.js';
+import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names.js';
 
 /**
  * if we create this server with port === crossDomainPort, origin header doesn't get properly sent

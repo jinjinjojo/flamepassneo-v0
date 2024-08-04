@@ -1,6 +1,6 @@
-import RammerheadLogging from './RammerheadLogging';
-import RammerheadSession from './RammerheadSession';
-import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore';
+import RammerheadLogging from './RammerheadLogging.js';
+import RammerheadSession from './RammerheadSession.js';
+import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore.js';
 
 class RammerheadSessionMemoryStore extends RammerheadSessionAbstractStore {
     /**

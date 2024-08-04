@@ -1,9 +1,9 @@
-import generateId from '../util/generateId';
-import URLPath from '../util/URLPath';
-import httpResponse from '../util/httpResponse';
-import config from '../config';
-import StrShuffler from '../util/StrShuffler';
-import RammerheadSession from '../classes/RammerheadSession';
+import generateId from '../util/generateId.js';
+import URLPath from '../util/URLPath.js';
+import httpResponse from '../util/httpResponse.js';
+import config from '../config.js';
+import StrShuffler from '../util/StrShuffler.js';
+import RammerheadSession from '../classes/RammerheadSession.js';
 
 /**
  *

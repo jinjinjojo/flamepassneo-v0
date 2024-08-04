@@ -24,10 +24,10 @@ export default async function (jsCache) {
 // patch ScriptResourceProcessor
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/script.ts#L21
 
-import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script';
-import { processScript } from 'testcafe-hammerhead/lib/processing/script';
-import { updateScriptImportUrls } from 'testcafe-hammerhead/lib/utils/url';
-import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names';
+import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
+import { processScript } from 'testcafe-hammerhead/lib/processing/script/index.js';
+import { updateScriptImportUrls } from 'testcafe-hammerhead/lib/utils/url.js';
+import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names.js';
 
 scriptProcessor.__proto__.processResource = async function processResource(script, ctx, _charset, urlReplacer) {
     if (!script) return script;

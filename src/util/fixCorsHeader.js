@@ -1,5 +1,5 @@
-import urlUtils from 'testcafe-hammerhead/lib/utils/url';
-import RequestPipelineContext from 'testcafe-hammerhead/lib/request-pipeline/context';
+import urlUtils from 'testcafe-hammerhead/lib/utils/url.js';
+import RequestPipelineContext from 'testcafe-hammerhead/lib/request-pipeline/context/index.js';
 
 /**
  * if a non-crossdomain origin makes a request to a crossdomain port, the ports are flipped. this is to fix that issue.

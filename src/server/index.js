@@ -1,18 +1,19 @@
 import cluster from 'cluster';
+import DotenvFlow from 'dotenv-flow';
 if (cluster.isMaster) {
-    require('dotenv-flow').config();
+    DotenvFlow.config();
 }
 
 import exitHook from 'async-exit-hook';
 import sticky from 'sticky-session-custom';
-import RammerheadProxy from '../classes/RammerheadProxy';
-import addStaticDirToProxy from '../util/addStaticDirToProxy';
-import RammerheadSessionFileCache from '../classes/RammerheadSessionFileCache';
-import config from '../config';
-import setupRoutes from './setupRoutes';
-import setupPipeline from './setupPipeline';
-import RammerheadLogging from '../classes/RammerheadLogging';
-import getSessionId from '../util/getSessionId';
+import RammerheadProxy from '../classes/RammerheadProxy.js';
+import addStaticDirToProxy from '../util/addStaticDirToProxy.js';
+import RammerheadSessionFileCache from '../classes/RammerheadSessionFileCache.js';
+import config from '../config.js';
+import setupRoutes from './setupRoutes.js';
+import setupPipeline from './setupPipeline.js';
+import RammerheadLogging from '../classes/RammerheadLogging.js';
+import getSessionId from '../util/getSessionId.js';
 
 const prefix = config.enableWorkers ? (cluster.isMaster ? '(master) ' : `(${cluster.worker.id}) `) : '';
 

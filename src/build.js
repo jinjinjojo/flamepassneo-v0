@@ -1,14 +1,14 @@
-import('dotenv-flow').config();
-
+import DotenvFlow from 'dotenv-flow';
+DotenvFlow.config();
 import path from 'path';
 import fs from 'fs';
 import UglifyJS from 'uglify-js';
 
 // modify unmodifable items that cannot be hooked in rammerhead.js
 fs.writeFileSync(
-    path.join(__dirname, './client/hammerhead.js'),
+    path.join(import.meta.dirname, './client/hammerhead.js'),
     fs
-        .readFileSync(path.join(__dirname, '../node_modules/testcafe-hammerhead/lib/client/hammerhead.js'), 'utf8')
+        .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/hammerhead.js'), 'utf8')
         // part of fix for iframing issue
         .replace('(function initHammerheadClient () {', '(function initHammerheadClient () {' +
             'if (window["%is-hammerhead%"]) throw new TypeError("already ran"); window["%is-hammerhead%"] = true;' +
@@ -89,9 +89,9 @@ fs.writeFileSync(
 // worker-hammerhead.js:2434 Uncaught TypeError: Cannot read properties of undefined (reading 'toString')
 //     at worker-hammerhead.js:2434:35
 fs.writeFileSync(
-    path.join(__dirname, './client/worker-hammerhead.js'),
+    path.join(import.meta.dirname, './client/worker-hammerhead.js'),
     fs
-        .readFileSync(path.join(__dirname, '../node_modules/testcafe-hammerhead/lib/client/worker-hammerhead.js'), 'utf8')
+        .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/worker-hammerhead.js'), 'utf8')
         .replace('proxyLocation.port.toString()', 'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)')
 );
 
@@ -99,18 +99,18 @@ fs.writeFileSync(
 // transport-worker.js:1022 Uncaught TypeError: Cannot read properties of undefined (reading 'toString')
 //     at transport-worker.js:1022:38
 fs.writeFileSync(
-    path.join(__dirname, './client/transport-worker.js'),
+    path.join(import.meta.dirname, './client/transport-worker.js'),
     fs
-    .readFileSync(path.join(__dirname, '../node_modules/testcafe-hammerhead/lib/client/transport-worker.js'), 'utf8')
+    .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/transport-worker.js'), 'utf8')
     .replace('proxyLocation.port.toString()', 'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)')
 );
 
 const minify = (fileName, newFileName) => {
-    const minified = UglifyJS.minify(fs.readFileSync(path.join(__dirname, './client', fileName), 'utf8'));
+    const minified = UglifyJS.minify(fs.readFileSync(path.join(import.meta.dirname, './client', fileName), 'utf8'));
     if (minified.error) {
         throw minified.error;
     }
-    fs.writeFileSync(path.join(__dirname, './client', newFileName), minified.code, 'utf8');
+    fs.writeFileSync(path.join(import.meta.dirname, './client', newFileName), minified.code, 'utf8');
 };
 
 minify('rammerhead.js', 'rammerhead.min.js');

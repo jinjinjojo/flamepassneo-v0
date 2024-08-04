@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from'path';
-import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore';
-import RammerheadSession from './RammerheadSession';
-import RammerheadLogging from '../classes/RammerheadLogging';
+import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore.js';
+import RammerheadSession from './RammerheadSession.js';
+import RammerheadLogging from '../classes/RammerheadLogging.js';
 
 // rh = rammerhead. extra f to distinguish between rhsession (folder) and rhfsession (file)
 const sessionFileExtension = '.rhfsession';
@@ -27,7 +27,7 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
      * @param {number} options.staleCleanupOptions.staleCheckInterval
      */
     constructor({
-        saveDirectory = path.join(__dirname, '../../sessions'),
+        saveDirectory = path.join(import.meta.dirname, '../../sessions'),
         logger = new RammerheadLogging({ logLevel: 'disabled' }),
         cacheTimeout = 1000 * 60 * 20, // 20 minutes
         cacheCheckInterval = 1000 * 60 * 10, // 10 minutes,

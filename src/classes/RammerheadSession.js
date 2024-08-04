@@ -1,7 +1,8 @@
-import { Session } from 'testcafe-hammerhead';
-import UploadStorage from 'testcafe-hammerhead/lib/upload/storage';
-import generateId from '../util/generateId';
-import StrShuffler from '../util/StrShuffler';
+import pkg from 'testcafe-hammerhead';
+const { Session } = pkg;
+import UploadStorage from 'testcafe-hammerhead/lib/upload/storage.js';
+import generateId from '../util/generateId.js';
+import StrShuffler from '../util/StrShuffler.js';
 
 // disable UploadStorage, a testcafe testing feature we do not need
 const emptyFunc = () => {};
