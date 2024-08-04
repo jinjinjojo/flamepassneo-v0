@@ -8,6 +8,9 @@ import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page.js'
 import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
 import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet.js';
 import urlUtil from 'testcafe-hammerhead/lib/utils/url.js';
+//this is a hacky workaround for ONE thing
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 const IS_WIN = platform() === 'win32';
 const DISK_RE = /^[A-Za-z]:/;
@@ -62,8 +65,7 @@ function getResourceUrlReplacer(ctx) {
         return ctx.toProxyUrl(resolvedUrl, isCrossDomain, resourceType, charsetStr);
     };
 }
-
-import('testcafe-hammerhead/lib/processing/resources/index.js').process = async function process(
+require('testcafe-hammerhead/lib/processing/resources/index').process = async function process(
     ctx
 ) {
     const { destResBody, contentInfo } = ctx;
