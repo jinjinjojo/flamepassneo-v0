@@ -1,5 +1,6 @@
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/index.ts
 
+import { createRequire } from 'module';
 import { platform } from 'os';
 import url from 'url';
 import { decodeContent, encodeContent } from 'testcafe-hammerhead/lib/processing/encoding/index.js';
@@ -8,8 +9,7 @@ import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page.js'
 import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
 import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet.js';
 import urlUtil from 'testcafe-hammerhead/lib/utils/url.js';
-//this is a hacky workaround for ONE thing
-import { createRequire } from 'module';
+//hacky workaround goes brrr
 const require = createRequire(import.meta.url);
 
 const IS_WIN = platform() === 'win32';
