@@ -8,8 +8,8 @@ let cacheSet = async (_key, _value) => {
 };
 
 /**
- * 
- * @param {import('../classes/RammerheadJSAbstractCache.js')} jsCache 
+ *
+ * @param {import('../classes/RammerheadJSAbstractCache.js')} jsCache
  */
 export default async function (jsCache) {
     const md5 = (data) => crypto.createHash('md5').update(data).digest('hex');
@@ -18,18 +18,23 @@ export default async function (jsCache) {
     cacheSet = async (key, value) => {
         if (!value) return;
         await jsCache.set(md5(key), value);
-    }
-};
+    };
+}
 
 // patch ScriptResourceProcessor
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/script.ts#L21
 
 import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
 import { processScript } from 'testcafe-hammerhead/lib/processing/script/index.js';
-import { updateScriptImportUrls } from 'testcafe-hammerhead/lib/utils/url.js';
 import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names.js';
+import { updateScriptImportUrls } from 'testcafe-hammerhead/lib/utils/url.js';
 
-scriptProcessor.__proto__.processResource = async function processResource(script, ctx, _charset, urlReplacer) {
+scriptProcessor.__proto__.processResource = async function processResource(
+    script,
+    ctx,
+    _charset,
+    urlReplacer
+) {
     if (!script) return script;
 
     let processedScript = await cacheGet(script);
@@ -44,7 +49,13 @@ scriptProcessor.__proto__.processResource = async function processResource(scrip
             ctx.nativeAutomation
         );
         await cacheSet(script, processedScript);
-    } else processedScript = updateScriptImportUrls(processedScript, ctx.serverInfo, ctx.session.id, ctx.windowId);
+    } else
+        processedScript = updateScriptImportUrls(
+            processedScript,
+            ctx.serverInfo,
+            ctx.session.id,
+            ctx.windowId
+        );
 
     return processedScript;
 };

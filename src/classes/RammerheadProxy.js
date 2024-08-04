@@ -1,16 +1,16 @@
+import fs from 'fs';
 import http from 'http';
 import https from 'https';
-import stream from 'stream';
-import fs from 'fs';
 import path from 'path';
+import stream from 'stream';
+import pkg from 'testcafe-hammerhead';
 import { getPathname } from 'testcafe-hammerhead/lib/utils/url.js';
 import WebSocket from 'ws';
+import RammerheadLogging from '../classes/RammerheadLogging.js';
+import URLPath from '../util/URLPath.js';
 import httpResponse from '../util/httpResponse.js';
 import streamToString from '../util/streamToString.js';
-import URLPath from '../util/URLPath.js';
-import RammerheadLogging from '../classes/RammerheadLogging.js';
 import RammerheadJSMemCache from './RammerheadJSMemCache.js';
-import pkg from 'testcafe-hammerhead'
 const { Proxy } = pkg;
 import jsDiskCache from '../util/addJSDiskCache.js';
 
@@ -23,9 +23,8 @@ import('../util/patchAsyncResourceProcessor.js');
 let addJSDiskCache = function (jsCache) {
     jsDiskCache(jsCache);
     // modification only works once
-    addJSDiskCache = () => { };
+    addJSDiskCache = () => {};
 };
-
 
 /**
  * taken directly from
@@ -126,12 +125,13 @@ class RammerheadProxy extends Proxy {
             // a downside to using only one proxy server is that crossdomain requests
             // will not be simulated correctly
             proxyHttpOrHttps.createServer = function (...args) {
-                const emptyFunc = () => { };
+                const emptyFunc = () => {};
                 if (onlyOneHttpServer) {
                     // createServer for server1 already called. now we return a mock http server for server2
                     return { on: emptyFunc, listen: emptyFunc, close: emptyFunc };
                 }
-                if (args.length !== 2) throw new Error('unexpected argument length coming from hammerhead');
+                if (args.length !== 2)
+                    throw new Error('unexpected argument length coming from hammerhead');
                 return (onlyOneHttpServer = originalCreateServer(...args));
             };
 
@@ -180,8 +180,10 @@ class RammerheadProxy extends Proxy {
         this.onUpgradePipeline = [];
         this.websocketRoutes = [];
         this.rewriteServerHeaders = {
-            'permissions-policy': (headerValue) => headerValue && headerValue.replace(/sync-xhr/g, 'sync-yes'),
-            'feature-policy': (headerValue) => headerValue && headerValue.replace(/sync-xhr/g, 'sync-yes'),
+            'permissions-policy': (headerValue) =>
+                headerValue && headerValue.replace(/sync-xhr/g, 'sync-yes'),
+            'feature-policy': (headerValue) =>
+                headerValue && headerValue.replace(/sync-xhr/g, 'sync-yes'),
             'referrer-policy': () => 'no-referrer-when-downgrade',
             'report-to': () => undefined,
             'cross-origin-embedder-policy': () => undefined
@@ -200,7 +202,9 @@ class RammerheadProxy extends Proxy {
     }
 
     start() {
-        throw new TypeError('rammerhead does not need a start(). server will automatically start when constructor is initialized.');
+        throw new TypeError(
+            'rammerhead does not need a start(). server will automatically start when constructor is initialized.'
+        );
     }
 
     // add WS routing
@@ -237,8 +241,10 @@ class RammerheadProxy extends Proxy {
     getWSRoute(path, doDelete = false) {
         for (let i = 0; i < this.websocketRoutes.length; i++) {
             if (
-                (typeof this.websocketRoutes[i].route === 'string' && this.websocketRoutes[i].route === path) ||
-                (this.websocketRoutes[i] instanceof RegExp && this.websocketRoutes[i].route.test(path))
+                (typeof this.websocketRoutes[i].route === 'string' &&
+                    this.websocketRoutes[i].route === path) ||
+                (this.websocketRoutes[i] instanceof RegExp &&
+                    this.websocketRoutes[i].route.test(path))
             ) {
                 const route = this.websocketRoutes[i];
                 if (doDelete) {
@@ -365,7 +371,9 @@ class RammerheadProxy extends Proxy {
                         for (const header in self.rewriteServerHeaders) {
                             if (alreadyRewrittenHeaders.includes(header)) continue;
                             // if user wants to add headers, they can do that here
-                            const value = self.rewriteServerHeaders[header] && self.rewriteServerHeaders[header]();
+                            const value =
+                                self.rewriteServerHeaders[header] &&
+                                self.rewriteServerHeaders[header]();
                             if (value) {
                                 headers.push(header, value);
                             }
@@ -375,7 +383,8 @@ class RammerheadProxy extends Proxy {
                             if (header in self.rewriteServerHeaders) {
                                 alreadyRewrittenHeaders.push(header);
                                 headers[header] =
-                                    self.rewriteServerHeaders[header] && self.rewriteServerHeaders[header]();
+                                    self.rewriteServerHeaders[header] &&
+                                    self.rewriteServerHeaders[header]();
                                 if (!headers[header]) {
                                     delete headers[header];
                                 }
@@ -383,7 +392,9 @@ class RammerheadProxy extends Proxy {
                         }
                         for (const header in self.rewriteServerHeaders) {
                             if (alreadyRewrittenHeaders.includes(header)) continue;
-                            const value = self.rewriteServerHeaders[header] && self.rewriteServerHeaders[header]();
+                            const value =
+                                self.rewriteServerHeaders[header] &&
+                                self.rewriteServerHeaders[header]();
                             if (value) {
                                 headers[header] = value;
                             }
@@ -411,7 +422,13 @@ class RammerheadProxy extends Proxy {
         // hammerhead's routing does not support websockets. Allowing it
         // will result in an error thrown
         if (isRoute && isWebsocket) {
-            httpResponse.badRequest(this.logger, req, res, ip, 'Rejected unsupported websocket request');
+            httpResponse.badRequest(
+                this.logger,
+                req,
+                res,
+                ip,
+                'Rejected unsupported websocket request'
+            );
             return;
         }
         super._onRequest(req, res, serverInfo);
@@ -456,14 +473,23 @@ class RammerheadProxy extends Proxy {
     _setupRammerheadServiceRoutes() {
         this.GET('/rammerhead.js', {
             content: fs.readFileSync(
-                path.join(import.meta.dirname, '../client/rammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(
+                    import.meta.dirname,
+                    '../client/rammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js')
+                )
             ),
             contentType: 'application/x-javascript'
         });
         this.GET('/api/shuffleDict', (req, res) => {
             const { id } = new URLPath(req.url).getParams();
             if (!id || !this.openSessions.has(id)) {
-                return httpResponse.badRequest(this.logger, req, res, this.loggerGetIP(req), 'Invalid session id');
+                return httpResponse.badRequest(
+                    this.logger,
+                    req,
+                    res,
+                    this.loggerGetIP(req),
+                    'Invalid session id'
+                );
             }
             res.end(JSON.stringify(this.openSessions.get(id).shuffleDict) || '');
         });
@@ -478,7 +504,8 @@ class RammerheadProxy extends Proxy {
                 res.end('server disabled localStorage sync');
                 return;
             }
-            const badRequest = (msg) => httpResponse.badRequest(this.logger, req, res, this.loggerGetIP(req), msg);
+            const badRequest = (msg) =>
+                httpResponse.badRequest(this.logger, req, res, this.loggerGetIP(req), msg);
             const respondJson = (obj) => res.end(JSON.stringify(obj));
             const { sessionId, origin } = new URLPath(req.url).getParams();
 
@@ -523,8 +550,10 @@ class RammerheadProxy extends Proxy {
                         // sync server and client localStorage
 
                         parsed.timestamp = parseInt(parsed.timestamp);
-                        if (isNaN(parsed.timestamp)) return badRequest('must specify valid timestamp');
-                        if (parsed.timestamp > now) return badRequest('cannot specify timestamp in the future');
+                        if (isNaN(parsed.timestamp))
+                            return badRequest('must specify valid timestamp');
+                        if (parsed.timestamp > now)
+                            return badRequest('cannot specify timestamp in the future');
                         if (!parsed.data || typeof parsed.data !== 'object')
                             return badRequest('data must be an object');
 
@@ -536,9 +565,14 @@ class RammerheadProxy extends Proxy {
 
                         if (!session.data.localStorage[origin]) {
                             // server does not have data, so use client's
-                            session.data.localStorage[origin] = { data: parsed.data, timestamp: now };
+                            session.data.localStorage[origin] = {
+                                data: parsed.data,
+                                timestamp: now
+                            };
                             return respondJson({});
-                        } else if (session.data.localStorage[origin].timestamp <= parsed.timestamp) {
+                        } else if (
+                            session.data.localStorage[origin].timestamp <= parsed.timestamp
+                        ) {
                             // server data is either the same as client or outdated, but we
                             // sync even if timestamps are the same in case the client changed the localStorage
                             // without updating
@@ -576,7 +610,9 @@ class RammerheadProxy extends Proxy {
     }
 
     openSession() {
-        throw new TypeError('unimplemented. please use a RammerheadSessionStore and use their .add() method');
+        throw new TypeError(
+            'unimplemented. please use a RammerheadSessionStore and use their .add() method'
+        );
     }
     close() {
         super.close();
@@ -590,17 +626,26 @@ class RammerheadProxy extends Proxy {
     GET(route, handler) {
         if (route === '/hammerhead.js') {
             handler.content = fs.readFileSync(
-                path.join(import.meta.dirname, '../client/hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(
+                    import.meta.dirname,
+                    '../client/hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js')
+                )
             );
         }
         if (route === '/worker-hammerhead.js') {
             handler.content = fs.readFileSync(
-                path.join(import.meta.dirname, '../client/worker-hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(
+                    import.meta.dirname,
+                    '../client/worker-hammerhead' + (process.env.DEVELOPMENT ? '.js' : '.min.js')
+                )
             );
         }
         if (route === '/transport-worker.js') {
             handler.content = fs.readFileSync(
-                path.join(import.meta.dirname, '../client/transport-worker' + (process.env.DEVELOPMENT ? '.js' : '.min.js'))
+                path.join(
+                    import.meta.dirname,
+                    '../client/transport-worker' + (process.env.DEVELOPMENT ? '.js' : '.min.js')
+                )
             );
         }
         super.GET(route, handler);

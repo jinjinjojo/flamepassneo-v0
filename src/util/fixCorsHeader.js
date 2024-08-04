@@ -1,5 +1,5 @@
-import urlUtils from 'testcafe-hammerhead/lib/utils/url.js';
 import RequestPipelineContext from 'testcafe-hammerhead/lib/request-pipeline/context/index.js';
+import urlUtils from 'testcafe-hammerhead/lib/utils/url.js';
 
 /**
  * if a non-crossdomain origin makes a request to a crossdomain port, the ports are flipped. this is to fix that issue.
@@ -21,7 +21,8 @@ RequestPipelineContext.prototype.getProxyOrigin = function getProxyOrigin(isCros
     // don't add a port if port is 443 and protocol is https:, and don't add a port if port is 80 and protocol is http:.
     // note that this isn't supported by the client rewriting, so client hammerhead's port.toString() will throw an error
     const hostPort =
-        (this.serverInfo.protocol == 'https:' && port == 443) || (this.serverInfo.protocol == 'http:' && port == 80)
+        (this.serverInfo.protocol == 'https:' && port == 443) ||
+        (this.serverInfo.protocol == 'http:' && port == 80)
             ? null
             : port;
 

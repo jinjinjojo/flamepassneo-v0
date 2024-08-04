@@ -1,7 +1,7 @@
 // fixes unpipe error and crashes resulting from http requests to websocket proxy endpoint
 
-import stages from 'testcafe-hammerhead/lib/request-pipeline/stages.js';
 import { Duplex } from 'stream';
+import stages from 'testcafe-hammerhead/lib/request-pipeline/stages.js';
 
 stages.unshift(function fixWebsocket(ctx) {
     ctx.isWebSocket = ctx.res instanceof Duplex;
@@ -21,7 +21,9 @@ hammerheadWS.respondOnWebSocket = function (ctx) {
     // crashes happen when client wants websocket but destination server says no.
     // reproduced by setting disableHttp2 to true and going to web.whatsapp.com
     if (!ctx.destRes.upgrade) {
-        ctx.res.end(`HTTP/${ctx.destRes.httpVersion} ${ctx.destRes.statusCode} ${ctx.destRes.statusMessage}\r\r\n`);
+        ctx.res.end(
+            `HTTP/${ctx.destRes.httpVersion} ${ctx.destRes.statusCode} ${ctx.destRes.statusMessage}\r\r\n`
+        );
         ctx.destRes.destroy();
         return;
     }

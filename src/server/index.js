@@ -6,16 +6,20 @@ if (cluster.isMaster) {
 
 import exitHook from 'async-exit-hook';
 import sticky from 'sticky-session-custom';
+import RammerheadLogging from '../classes/RammerheadLogging.js';
 import RammerheadProxy from '../classes/RammerheadProxy.js';
-import addStaticDirToProxy from '../util/addStaticDirToProxy.js';
 import RammerheadSessionFileCache from '../classes/RammerheadSessionFileCache.js';
 import config from '../config.js';
-import setupRoutes from './setupRoutes.js';
-import setupPipeline from './setupPipeline.js';
-import RammerheadLogging from '../classes/RammerheadLogging.js';
+import addStaticDirToProxy from '../util/addStaticDirToProxy.js';
 import getSessionId from '../util/getSessionId.js';
+import setupPipeline from './setupPipeline.js';
+import setupRoutes from './setupRoutes.js';
 
-const prefix = config.enableWorkers ? (cluster.isMaster ? '(master) ' : `(${cluster.worker.id}) `) : '';
+const prefix = config.enableWorkers
+    ? cluster.isMaster
+        ? '(master) '
+        : `(${cluster.worker.id}) `
+    : '';
 
 const logger = new RammerheadLogging({
     logLevel: config.logLevel,
@@ -56,7 +60,8 @@ exitHook(() => {
 });
 
 if (!config.enableWorkers) {
-    const formatUrl = (secure, hostname, port) => `${secure ? 'https' : 'http'}://${hostname}:${port}`;
+    const formatUrl = (secure, hostname, port) =>
+        `${secure ? 'https' : 'http'}://${hostname}:${port}`;
     logger.info(
         `(server) Rammerhead proxy is listening on ${formatUrl(config.ssl, config.bindingAddress, config.port)}`
     );
@@ -93,17 +98,31 @@ if (config.enableWorkers) {
             return sessionId.split('').map((e) => e.charCodeAt());
         }
     };
-    logger.info(JSON.stringify({ port: config.port, crossPort: config.crossDomainPort, master: cluster.isMaster }));
-    const closeMasters = [sticky.listen(proxyServer.server1, config.port, config.bindingAddress, stickyOptions)];
+    logger.info(
+        JSON.stringify({
+            port: config.port,
+            crossPort: config.crossDomainPort,
+            master: cluster.isMaster
+        })
+    );
+    const closeMasters = [
+        sticky.listen(proxyServer.server1, config.port, config.bindingAddress, stickyOptions)
+    ];
     if (config.crossDomainPort) {
         closeMasters.push(
-            sticky.listen(proxyServer.server2, config.crossDomainPort, config.bindingAddress, stickyOptions)
+            sticky.listen(
+                proxyServer.server2,
+                config.crossDomainPort,
+                config.bindingAddress,
+                stickyOptions
+            )
         );
     }
 
     if (closeMasters[0]) {
         // master process //
-        const formatUrl = (secure, hostname, port) => `${secure ? 'https' : 'http'}://${hostname}:${port}`;
+        const formatUrl = (secure, hostname, port) =>
+            `${secure ? 'https' : 'http'}://${hostname}:${port}`;
         logger.info(
             `Rammerhead proxy load balancer is listening on ${formatUrl(
                 config.ssl,

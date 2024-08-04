@@ -1,6 +1,6 @@
-import mime from 'mime';
 import fs from 'fs';
 import path from 'path';
+import mime from 'mime';
 
 // these routes are reserved by hammerhead and rammerhead
 const forbiddenRoutes = [
@@ -22,7 +22,12 @@ const isDirectory = (dir) => fs.lstatSync(dir).isDirectory();
  * publicly. /index.html will automatically link to /
  * @param {string} rootPath - all the files that will be served under rootPath
  */
-function addStaticFilesToProxy(proxy, staticDir, rootPath = '/', shouldIgnoreFile = (_file, _dir) => false) {
+function addStaticFilesToProxy(
+    proxy,
+    staticDir,
+    rootPath = '/',
+    shouldIgnoreFile = (_file, _dir) => false
+) {
     if (!isDirectory(staticDir)) {
         throw new TypeError('specified folder path is not a directory');
     }
@@ -34,7 +39,12 @@ function addStaticFilesToProxy(proxy, staticDir, rootPath = '/', shouldIgnoreFil
 
     files.map((file) => {
         if (isDirectory(path.join(staticDir, file))) {
-            addStaticFilesToProxy(proxy, path.join(staticDir, file), rootPath + file + '/', shouldIgnoreFile);
+            addStaticFilesToProxy(
+                proxy,
+                path.join(staticDir, file),
+                rootPath + file + '/',
+                shouldIgnoreFile
+            );
             return;
         }
 

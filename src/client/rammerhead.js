@@ -3,7 +3,9 @@
     if (!hammerhead) throw new Error('hammerhead not loaded yet');
     if (hammerhead.settings._settings.sessionId) {
         // task.js already loaded. this will likely never happen though since this file loads before task.js
-        console.warn('unexpected task.js to load before rammerhead.js. url shuffling cannot be used');
+        console.warn(
+            'unexpected task.js to load before rammerhead.js. url shuffling cannot be used'
+        );
         main();
     } else {
         // wait for task.js to load
@@ -102,7 +104,11 @@
                 }
             } else {
                 // resync
-                response = localStorageRequest({ type: 'sync', timestamp: timestamp, data: proxiedLocalStorage });
+                response = localStorageRequest({
+                    type: 'sync',
+                    timestamp: timestamp,
+                    data: proxiedLocalStorage
+                });
                 if (response.timestamp) {
                     updateTimestamp(response.timestamp);
                     overwriteLocalStorage(response.data);
@@ -111,7 +117,8 @@
             isSyncing = false;
 
             function overwriteLocalStorage(data) {
-                if (!data || typeof data !== 'object') throw new TypeError('data must be an object');
+                if (!data || typeof data !== 'object')
+                    throw new TypeError('data must be an object');
                 proxiedLocalStorage.clear();
                 for (var prop in data) {
                     proxiedLocalStorage[prop] = data[prop];
@@ -120,7 +127,8 @@
         }
         function updateTimestamp(timestamp) {
             if (!timestamp) throw new TypeError('timestamp must be defined');
-            if (isNaN(parseInt(timestamp))) throw new TypeError('timestamp must be a number. received' + timestamp);
+            if (isNaN(parseInt(timestamp)))
+                throw new TypeError('timestamp must be a number. received' + timestamp);
             realLocalStorage[timestampKey] = timestamp;
         }
         function getTimestamp() {
@@ -136,7 +144,10 @@
         }
         function getSyncStorageEndpoint() {
             return (
-                '/syncLocalStorage?sessionId=' + encodeURIComponent(sessionId) + '&origin=' + encodeURIComponent(origin)
+                '/syncLocalStorage?sessionId=' +
+                encodeURIComponent(sessionId) +
+                '&origin=' +
+                encodeURIComponent(origin)
             );
         }
         function localStorageRequest(data, callback) {
@@ -153,7 +164,10 @@
                 }
                 if (request.status !== 200)
                     throw new Error(
-                        'server sent a non 200 code. got ' + request.status + '. Response: ' + request.responseText
+                        'server sent a non 200 code. got ' +
+                            request.status +
+                            '. Response: ' +
+                            request.responseText
                     );
             }
             if (!callback) {
@@ -261,9 +275,12 @@
 
         const replaceUrl = (url, replacer) => {
             //        regex:              https://google.com/    sessionid/   url
-            return (url || '').replace(/^((?:[a-z0-9]+:\/\/[^/]+)?(?:\/[^/]+\/))([^]+)/i, function (_, g1, g2) {
-                return g1 + replacer(g2);
-            });
+            return (url || '').replace(
+                /^((?:[a-z0-9]+:\/\/[^/]+)?(?:\/[^/]+\/))([^]+)/i,
+                function (_, g1, g2) {
+                    return g1 + replacer(g2);
+                }
+            );
         };
         const shuffler = new StrShuffler(shuffleDict);
 
@@ -378,10 +395,12 @@
         // completely replace hammerhead's implementation as restore() and save() on every
         // call is just not viable (mainly memory issues as the garbage collector is sometimes not fast enough)
 
-        const getLocHost = win => (new URL(hammerhead.utils.url.parseProxyUrl(win.location.href).destUrl)).host;
-        const prefix = win => `rammerhead|storage-wrapper|${hammerhead.settings._settings.sessionId}|${
-            getLocHost(win)
-        }|`;
+        const getLocHost = (win) =>
+            new URL(hammerhead.utils.url.parseProxyUrl(win.location.href).destUrl).host;
+        const prefix = (win) =>
+            `rammerhead|storage-wrapper|${hammerhead.settings._settings.sessionId}|${getLocHost(
+                win
+            )}|`;
         const toRealStorageKey = (key = '', win = window) => prefix(win) + key;
         const fromRealStorageKey = (key = '', win = window) => {
             if (!key.startsWith(prefix(win))) return null;
@@ -389,7 +408,15 @@
         };
 
         const replaceStorageInstance = (storageProp, realStorage) => {
-            const reservedProps = ['internal', 'clear', 'key', 'getItem', 'setItem', 'removeItem', 'length'];
+            const reservedProps = [
+                'internal',
+                'clear',
+                'key',
+                'getItem',
+                'setItem',
+                'removeItem',
+                'length'
+            ];
             Object.defineProperty(window, storageProp, {
                 // define a value-based instead of getter-based property, since with this localStorage implementation,
                 // we don't need to rely on sharing a single memory-based storage across frames, unlike hammerhead
@@ -451,8 +478,14 @@
             });
         };
 
-        replaceStorageInstance('localStorage', hammerhead.storages.localStorageProxy.internal.nativeStorage);
-        replaceStorageInstance('sessionStorage', hammerhead.storages.sessionStorageProxy.internal.nativeStorage);
+        replaceStorageInstance(
+            'localStorage',
+            hammerhead.storages.localStorageProxy.internal.nativeStorage
+        );
+        replaceStorageInstance(
+            'sessionStorage',
+            hammerhead.storages.sessionStorageProxy.internal.nativeStorage
+        );
         rewriteFunction('clear', function () {
             for (const [key] of Object.entries(this)) {
                 delete this[key];

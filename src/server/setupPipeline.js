@@ -14,7 +14,11 @@ export default function setupPipeline(proxyServer, sessionStore) {
         if (config.restrictSessionToIP) {
             const sessionId = getSessionId(req.url);
             const session = sessionId && sessionStore.get(sessionId);
-            if (session && session.data.restrictIP && session.data.restrictIP !== config.getIP(req)) {
+            if (
+                session &&
+                session.data.restrictIP &&
+                session.data.restrictIP !== config.getIP(req)
+            ) {
                 res.writeHead(403);
                 res.end('Sessions must come from the same IP');
                 return true;
@@ -26,4 +30,4 @@ export default function setupPipeline(proxyServer, sessionStore) {
         }
     });
     Object.assign(proxyServer.rewriteServerHeaders, config.rewriteServerHeaders);
-};
+}

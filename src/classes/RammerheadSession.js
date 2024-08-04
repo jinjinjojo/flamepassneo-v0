@@ -1,8 +1,8 @@
 import pkg from 'testcafe-hammerhead';
 const { Session } = pkg;
 import UploadStorage from 'testcafe-hammerhead/lib/upload/storage.js';
-import generateId from '../util/generateId.js';
 import StrShuffler from '../util/StrShuffler.js';
+import generateId from '../util/generateId.js';
 
 // disable UploadStorage, a testcafe testing feature we do not need
 const emptyFunc = () => {};
@@ -25,7 +25,12 @@ class RammerheadSession extends Session {
      * @param {boolean} options.disableShuffling
      * @param {string[]} options.prependScripts
      */
-    constructor({ id = generateId(), dontConnectToData = false, disableShuffling = false, prependScripts = [] } = {}) {
+    constructor({
+        id = generateId(),
+        dontConnectToData = false,
+        disableShuffling = false,
+        prependScripts = []
+    } = {}) {
         super(['blah/blah'], {
             allowMultipleWindows: true,
             disablePageCaching: false
@@ -61,7 +66,8 @@ class RammerheadSession extends Session {
         // so now, we undo the change we made that initially was to avoid the whole error mess and a potential source of memory leak.
         // (also we got the "last resort" error handling in addMoreErrorGuards.js so everything is fine)
         // this.isHttp2Disabled = () => true;
-        if (global.rhDisableHttp2) { // globally set from RammerheadProxy.js
+        if (global.rhDisableHttp2) {
+            // globally set from RammerheadProxy.js
             this.disableHttp2();
         }
 

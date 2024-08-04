@@ -1,8 +1,8 @@
 import fs from 'fs';
-import path from'path';
-import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore.js';
-import RammerheadSession from './RammerheadSession.js';
+import path from 'path';
 import RammerheadLogging from '../classes/RammerheadLogging.js';
+import RammerheadSession from './RammerheadSession.js';
+import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore.js';
 
 // rh = rammerhead. extra f to distinguish between rhsession (folder) and rhfsession (file)
 const sessionFileExtension = '.rhfsession';
@@ -51,9 +51,16 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
         this.cachedSessions = new Map();
         setInterval(() => this._saveCacheToDisk(), cacheCheckInterval).unref();
         if (staleCleanupOptions) {
-            this._removeStaleSessions(staleCleanupOptions.staleTimeout, staleCleanupOptions.maxToLive);
+            this._removeStaleSessions(
+                staleCleanupOptions.staleTimeout,
+                staleCleanupOptions.maxToLive
+            );
             setInterval(
-                () => this._removeStaleSessions(staleCleanupOptions.staleTimeout, staleCleanupOptions.maxToLive),
+                () =>
+                    this._removeStaleSessions(
+                        staleCleanupOptions.staleTimeout,
+                        staleCleanupOptions.maxToLive
+                    ),
                 staleCleanupOptions.staleCheckInterval
             ).unref();
         }
@@ -101,14 +108,17 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
 
         let session;
         try {
-            session = RammerheadSession.DeserializeSession(id, fs.readFileSync(this._getSessionFilePath(id)));
+            session = RammerheadSession.DeserializeSession(
+                id,
+                fs.readFileSync(this._getSessionFilePath(id))
+            );
         } catch (e) {
             if (e.name === 'SyntaxError' && e.message.includes('JSON')) {
                 this.logger.warn(`(FileCache.get) ${id} bad JSON`);
                 if (this.deleteCorruptedSessions) {
                     this.delete(id);
                     this.logger.warn(`(FileCache.get) ${id} deleted because of bad JSON`);
-            }
+                }
                 return;
             }
         }
@@ -158,7 +168,9 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
      * @param {string} serializedSession
      */
     addSerializedSession(id, serializedSession) {
-        this.logger.debug(`(FileCache.addSerializedSession) adding serialized session id ${id} to store`);
+        this.logger.debug(
+            `(FileCache.addSerializedSession) adding serialized session id ${id} to store`
+        );
         const session = RammerheadSession.DeserializeSession(id, serializedSession);
         fs.writeFileSync(this._getSessionFilePath(id), session.serializeSession());
         this.logger.debug(`(FileCache.addSerializedSession) added ${id} to cache`);
@@ -184,13 +196,17 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
     _removeStaleSessions(staleTimeout, maxToLive) {
         const sessionIds = this.keysStore();
         let deleteCount = 0;
-        this.logger.debug(`(FileCache._removeStaleSessions) Need to go through ${sessionIds.length} sessions in store`);
+        this.logger.debug(
+            `(FileCache._removeStaleSessions) Need to go through ${sessionIds.length} sessions in store`
+        );
 
         const now = Date.now();
         for (const id of sessionIds) {
             const session = this.get(id, false, false);
             if (!session) {
-                this.logger.debug(`(FileCache._removeStaleSessions) skipping ${id} as .get() returned undefined`);
+                this.logger.debug(
+                    `(FileCache._removeStaleSessions) skipping ${id} as .get() returned undefined`
+                );
                 continue;
             }
             if (
@@ -203,14 +219,18 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
             }
         }
 
-        this.logger.debug(`(FileCache._removeStaleSessions) Deleted ${deleteCount} sessions from store`);
+        this.logger.debug(
+            `(FileCache._removeStaleSessions) Deleted ${deleteCount} sessions from store`
+        );
     }
     /**
      * @private
      */
     _saveCacheToDisk(forceSave) {
         let deleteCount = 0;
-        this.logger.debug(`(FileCache._saveCacheToDisk) need to go through ${this.cachedSessions.size} sessions`);
+        this.logger.debug(
+            `(FileCache._saveCacheToDisk) need to go through ${this.cachedSessions.size} sessions`
+        );
 
         const now = Date.now();
         for (const [sessionId, session] of this.cachedSessions) {
@@ -218,9 +238,14 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
                 if (session.lastUsed === session.createdAt && this.deleteUnused) {
                     this.cachedSessions.delete(sessionId);
                     deleteCount++;
-                    this.logger.debug(`(FileCache._saveCacheToDisk) deleted unused ${sessionId} from memory`);
+                    this.logger.debug(
+                        `(FileCache._saveCacheToDisk) deleted unused ${sessionId} from memory`
+                    );
                 } else {
-                    fs.writeFileSync(this._getSessionFilePath(sessionId), session.serializeSession());
+                    fs.writeFileSync(
+                        this._getSessionFilePath(sessionId),
+                        session.serializeSession()
+                    );
                     this.cachedSessions.delete(sessionId);
                     deleteCount++;
                     this.logger.debug(
@@ -230,7 +255,9 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
             }
         }
 
-        this.logger.debug(`(FileCache._saveCacheToDisk) Removed ${deleteCount} sessions from memory`);
+        this.logger.debug(
+            `(FileCache._saveCacheToDisk) Removed ${deleteCount} sessions from memory`
+        );
     }
 }
 

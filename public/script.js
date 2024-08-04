@@ -97,7 +97,9 @@
             } else {
                 if (!shush)
                     setError(
-                        'unexpected server response to not match "200". Server says "' + request.responseText + '"'
+                        'unexpected server response to not match "200". Server says "' +
+                            request.responseText +
+                            '"'
                     );
             }
         };
@@ -105,7 +107,7 @@
 
     var api = {
         needpassword(callback) {
-            get('/needpassword', value => callback(value === 'true'));
+            get('/needpassword', (value) => callback(value === 'true'));
         },
         newsession(callback) {
             get('/newsession', callback);
@@ -113,11 +115,13 @@
         editsession(id, httpProxy, enableShuffling, callback) {
             get(
                 '/editsession?id=' +
-                encodeURIComponent(id) +
-                (httpProxy ? '&httpProxy=' + encodeURIComponent(httpProxy) : '') +
-                '&enableShuffling=' + (enableShuffling ? '1' : '0'),
+                    encodeURIComponent(id) +
+                    (httpProxy ? '&httpProxy=' + encodeURIComponent(httpProxy) : '') +
+                    '&enableShuffling=' +
+                    (enableShuffling ? '1' : '0'),
                 function (res) {
-                    if (res !== 'Success') return setError('unexpected response from server. received ' + res);
+                    if (res !== 'Success')
+                        return setError('unexpected response from server. received ' + res);
                     callback();
                 }
             );
@@ -232,7 +236,8 @@
     function loadSettings(session) {
         document.getElementById('session-id').value = session.id;
         document.getElementById('session-httpproxy').value = session.httpproxy || '';
-        document.getElementById('session-shuffling').checked = typeof session.enableShuffling === 'boolean' ? session.enableShuffling : true;
+        document.getElementById('session-shuffling').checked =
+            typeof session.enableShuffling === 'boolean' ? session.enableShuffling : true;
     }
     function loadSessions() {
         var sessions = sessionIdsStore.get();
@@ -266,7 +271,7 @@
         if (currentPort != mainPort) window.location.port = mainPort;
     });
 
-    api.needpassword(doNeed => {
+    api.needpassword((doNeed) => {
         if (doNeed) {
             document.getElementById('password-wrapper').style.display = '';
         }
@@ -277,10 +282,8 @@
         var showingAdvancedOptions = false;
         document.getElementById('session-advanced-toggle').onclick = function () {
             // eslint-disable-next-line no-cond-assign
-            document.getElementById('session-advanced-container').style.display = (showingAdvancedOptions =
-                !showingAdvancedOptions)
-                ? 'block'
-                : 'none';
+            document.getElementById('session-advanced-container').style.display =
+                (showingAdvancedOptions = !showingAdvancedOptions) ? 'block' : 'none';
         };
 
         document.getElementById('session-create-btn').onclick = function () {
@@ -299,7 +302,10 @@
             var url = document.getElementById('session-url').value || 'https://www.google.com/';
             if (!id) return setError('must generate a session id first');
             api.sessionexists(id, function (value) {
-                if (!value) return setError('session does not exist. try deleting or generating a new session');
+                if (!value)
+                    return setError(
+                        'session does not exist. try deleting or generating a new session'
+                    );
                 api.editsession(id, httpproxy, enableShuffling, function () {
                     editSession(id, httpproxy, enableShuffling);
                     api.shuffleDict(id, function (shuffleDict) {

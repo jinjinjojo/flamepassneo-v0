@@ -21,4 +21,4 @@ export default class URLPath extends URL {
     getParams() {
         return Object.fromEntries(this.searchParams);
     }
-};
+}

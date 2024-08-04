@@ -74,7 +74,9 @@ class RammerheadSessionMemoryStore extends RammerheadSessionAbstractStore {
      * @param {string} serializedSession
      */
     addSerializedSession(id, serializedSession) {
-        this.logger.debug(`(MemoryStore.addSerializedSession) adding serialized session id ${id} to store`);
+        this.logger.debug(
+            `(MemoryStore.addSerializedSession) adding serialized session id ${id} to store`
+        );
         const session = RammerheadSession.DeserializeSession(id, serializedSession);
         session.updateLastUsed();
         this.mapStore.set(id, session);
@@ -87,7 +89,9 @@ class RammerheadSessionMemoryStore extends RammerheadSessionAbstractStore {
      * @param {number|null} maxToLive
      */
     _cleanupRun(staleTimeout, maxToLive) {
-        this.logger.debug(`(MemoryStore._cleanupRun) cleanup run. Need to go through ${this.mapStore.size} sessions`);
+        this.logger.debug(
+            `(MemoryStore._cleanupRun) cleanup run. Need to go through ${this.mapStore.size} sessions`
+        );
 
         const now = Date.now();
         for (const [sessionId, session] of this.mapStore) {

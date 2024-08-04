@@ -5,4 +5,4 @@ export default function streamToString(stream) {
         stream.on('error', (err) => reject(err));
         stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
     });
-};
+}

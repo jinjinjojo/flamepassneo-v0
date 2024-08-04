@@ -1,26 +1,47 @@
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/index.ts
 
+import { platform } from 'os';
 import url from 'url';
-import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page.js';
+import { decodeContent, encodeContent } from 'testcafe-hammerhead/lib/processing/encoding/index.js';
 import manifestProcessor from 'testcafe-hammerhead/lib/processing/resources/manifest.js';
+import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page.js';
 import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script.js';
 import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet.js';
 import urlUtil from 'testcafe-hammerhead/lib/utils/url.js';
-import { encodeContent, decodeContent } from 'testcafe-hammerhead/lib/processing/encoding/index.js';
-import { platform } from 'os';
 
 const IS_WIN = platform() === 'win32';
 const DISK_RE = /^[A-Za-z]:/;
-const RESOURCE_PROCESSORS = [pageProcessor, manifestProcessor, scriptProcessor, stylesheetProcessor];
+const RESOURCE_PROCESSORS = [
+    pageProcessor,
+    manifestProcessor,
+    scriptProcessor,
+    stylesheetProcessor
+];
 
 function getResourceUrlReplacer(ctx) {
-    return function urlReplacer(resourceUrl, resourceType, charsetAttrValue, baseUrl, isCrossDomain = false, isUrlsSet = false) {
+    return function urlReplacer(
+        resourceUrl,
+        resourceType,
+        charsetAttrValue,
+        baseUrl,
+        isCrossDomain = false,
+        isUrlsSet = false
+    ) {
         if (isUrlsSet)
-            return urlUtil.handleUrlsSet(urlReplacer, resourceUrl, resourceType, charsetAttrValue, baseUrl, isCrossDomain);
+            return urlUtil.handleUrlsSet(
+                urlReplacer,
+                resourceUrl,
+                resourceType,
+                charsetAttrValue,
+                baseUrl,
+                isCrossDomain
+            );
 
-        if (!urlUtil.isSupportedProtocol(resourceUrl) && !urlUtil.isSpecialPage(resourceUrl)) return resourceUrl;
+        if (!urlUtil.isSupportedProtocol(resourceUrl) && !urlUtil.isSpecialPage(resourceUrl))
+            return resourceUrl;
 
-        if (IS_WIN && ctx.dest.protocol === 'file:' && DISK_RE.test(resourceUrl)) resourceUrl = '/' + resourceUrl;
+        if (IS_WIN && ctx.dest.protocol === 'file:' && DISK_RE.test(resourceUrl))
+            resourceUrl = '/' + resourceUrl;
 
         // NOTE: Resolves base URLs without a protocol ('//google.com/path' for example).
         baseUrl = baseUrl ? url.resolve(ctx.dest.url, baseUrl) : '';
@@ -42,7 +63,9 @@ function getResourceUrlReplacer(ctx) {
     };
 }
 
-import('testcafe-hammerhead/lib/processing/resources/index.js').process = async function process(ctx) {
+import('testcafe-hammerhead/lib/processing/resources/index.js').process = async function process(
+    ctx
+) {
     const { destResBody, contentInfo } = ctx;
     const { encoding, charset } = contentInfo;
 
@@ -51,7 +74,11 @@ import('testcafe-hammerhead/lib/processing/resources/index.js').process = async 
 
         const urlReplacer = getResourceUrlReplacer(ctx);
 
-        if (pageProcessor === processor) await ctx.prepareInjectableUserScripts(ctx.eventFactory, ctx.session.injectable.userScripts);
+        if (pageProcessor === processor)
+            await ctx.prepareInjectableUserScripts(
+                ctx.eventFactory,
+                ctx.session.injectable.userScripts
+            );
 
         const decoded = await decodeContent(destResBody, encoding, charset);
 

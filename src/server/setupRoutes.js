@@ -1,9 +1,9 @@
-import generateId from '../util/generateId.js';
-import URLPath from '../util/URLPath.js';
-import httpResponse from '../util/httpResponse.js';
+import RammerheadSession from '../classes/RammerheadSession.js';
 import config from '../config.js';
 import StrShuffler from '../util/StrShuffler.js';
-import RammerheadSession from '../classes/RammerheadSession.js';
+import URLPath from '../util/URLPath.js';
+import generateId from '../util/generateId.js';
+import httpResponse from '../util/httpResponse.js';
 
 /**
  *
@@ -85,7 +85,13 @@ export default function setupRoutes(proxyServer, sessionStore, logger) {
     proxyServer.GET('/sessionexists', (req, res) => {
         const id = new URLPath(req.url).get('id');
         if (!id) {
-            httpResponse.badRequest(logger, req, res, config.getIP(req), 'Must specify id parameter');
+            httpResponse.badRequest(
+                logger,
+                req,
+                res,
+                config.getIP(req),
+                'Must specify id parameter'
+            );
         } else {
             res.end(sessionStore.has(id) ? 'exists' : 'not found');
         }
@@ -94,4 +100,4 @@ export default function setupRoutes(proxyServer, sessionStore, logger) {
         const serverInfo = config.getServerInfo(req);
         res.end((serverInfo.port || '').toString());
     });
-};
+}

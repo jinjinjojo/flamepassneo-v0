@@ -1,8 +1,8 @@
-import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import RammerheadJSMemCache from './classes/RammerheadJSMemCache.js';
+import path from 'path';
 import RammerheadJSFileCache from './classes/RammerheadJSFileCache.js';
+import RammerheadJSMemCache from './classes/RammerheadJSMemCache.js';
 
 const enableWorkers = os.cpus().length !== 1;
 
@@ -25,7 +25,12 @@ export default {
     // this function's return object will determine how the client url rewriting will work.
     // set them differently from bindingAddress and port if rammerhead is being served
     // from a reverse proxy.
-    getServerInfo: () => ({ hostname: 'localhost', port: 8080, crossDomainPort: 8081, protocol: 'http:' }),
+    getServerInfo: () => ({
+        hostname: 'localhost',
+        port: 8080,
+        crossDomainPort: 8081,
+        protocol: 'http:'
+    }),
     // example of non-hard-coding the hostname header
     // getServerInfo: (req) => {
     //     return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 8443, protocol: 'https: };
@@ -43,7 +48,12 @@ export default {
     // caching options for js rewrites. (disk caching not recommended for slow HDD disks)
     // recommended: 50mb for memory, 5gb for disk
     // jsCache: new RammerheadJSMemCache(5 * 1024 * 1024),
-    jsCache: new RammerheadJSFileCache(path.join(import.meta.dirname, '../cache-js'), 5 * 1024 * 1024 * 1024, 50000, enableWorkers),
+    jsCache: new RammerheadJSFileCache(
+        path.join(import.meta.dirname, '../cache-js'),
+        5 * 1024 * 1024 * 1024,
+        50000,
+        enableWorkers
+    ),
 
     // whether to disable http2 support or not (from proxy to destination site).
     // disabling may reduce number of errors/memory, but also risk
@@ -53,10 +63,18 @@ export default {
 
     //// REWRITE HEADER CONFIGURATION ////
 
-    stripClientHeaders: ['cf-ipcountry', 'cf-ray', 'x-forwarded-proto', 'cf-visitor', 'cf-connecting-ip', 'cdn-loop', 'x-forwarded-for'],
+    stripClientHeaders: [
+        'cf-ipcountry',
+        'cf-ray',
+        'x-forwarded-proto',
+        'cf-visitor',
+        'cf-connecting-ip',
+        'cdn-loop',
+        'x-forwarded-for'
+    ],
     // if you want to modify response headers, like removing the x-frame-options header, do it like so:
     rewriteServerHeaders: {
-        'x-frame-options': null, // set to null to tell rammerhead that you want to delete it
+        'x-frame-options': null // set to null to tell rammerhead that you want to delete it
     },
     //// SESSION STORE CONFIG ////
 
@@ -72,7 +90,7 @@ export default {
             staleCheckInterval: 1000 * 60 * 60 * 6 // 6 hours
         },
         // corrupted session files happens when nodejs exits abruptly while serializing the JSON sessions to disk
-        deleteCorruptedSessions: true,
+        deleteCorruptedSessions: true
     },
 
     //// LOGGING CONFIGURATION ////
@@ -87,4 +105,5 @@ export default {
     // getIP: req => (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim()
 };
 
-if (fs.existsSync(path.join(import.meta.dirname, '../config.js'))) Object.assign(module.exports, require('../config'));
+if (fs.existsSync(path.join(import.meta.dirname, '../config.js')))
+    Object.assign(module.exports, require('../config'));

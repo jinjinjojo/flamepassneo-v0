@@ -1,35 +1,35 @@
 import DotenvFlow from 'dotenv-flow';
 DotenvFlow.config();
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import UglifyJS from 'uglify-js';
 
 // modify unmodifable items that cannot be hooked in rammerhead.js
 fs.writeFileSync(
     path.join(import.meta.dirname, './client/hammerhead.js'),
     fs
-        .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/hammerhead.js'), 'utf8')
+        .readFileSync(
+            path.join(
+                import.meta.dirname,
+                '../node_modules/testcafe-hammerhead/lib/client/hammerhead.js'
+            ),
+            'utf8'
+        )
         // part of fix for iframing issue
-        .replace('(function initHammerheadClient () {', '(function initHammerheadClient () {' +
-            'if (window["%is-hammerhead%"]) throw new TypeError("already ran"); window["%is-hammerhead%"] = true;' +
-            'window.rammerheadTop = (function() {var w = window; while (w !== w.top && w.parent["%hammerhead"]) w = w.parent; return w;})();' +
-            'window.rammerheadParent = window.rammerheadTop === window ? window : window.parent;' +
-            'window.distanceRammerheadTopToTop = (function() { var i=0,w=window; while (w !== window.top) {i++;w=w.parent} return i; })();' +
-            'window.rammerheadAncestorOrigins = Array.from(location.ancestorOrigins).slice(0, -window.distanceRammerheadTopToTop);\n')
+        .replace(
+            '(function initHammerheadClient () {',
+            '(function initHammerheadClient () {' +
+                'if (window["%is-hammerhead%"]) throw new TypeError("already ran"); window["%is-hammerhead%"] = true;' +
+                'window.rammerheadTop = (function() {var w = window; while (w !== w.top && w.parent["%hammerhead"]) w = w.parent; return w;})();' +
+                'window.rammerheadParent = window.rammerheadTop === window ? window : window.parent;' +
+                'window.distanceRammerheadTopToTop = (function() { var i=0,w=window; while (w !== window.top) {i++;w=w.parent} return i; })();' +
+                'window.rammerheadAncestorOrigins = Array.from(location.ancestorOrigins).slice(0, -window.distanceRammerheadTopToTop);\n'
+        )
         // fix iframing proxy issue.
         // we replace window.top comparisons with the most upper window that's still a proxied page
-        .replace(
-            /(window|win|wnd|instance|opener|activeWindow)\.top/g,
-            '$1.rammerheadTop'
-        )
-        .replace(
-            /window\.parent/g,
-            'window.rammerheadParent'
-        )
-        .replace(
-            /window\.location\.ancestorOrigins/g,
-            'window.rammerheadAncestorOrigins'
-        )
+        .replace(/(window|win|wnd|instance|opener|activeWindow)\.top/g, '$1.rammerheadTop')
+        .replace(/window\.parent/g, 'window.rammerheadParent')
+        .replace(/window\.location\.ancestorOrigins/g, 'window.rammerheadAncestorOrigins')
         .replace(
             'isCrossDomainParent = parentLocationWrapper === parentWindow.location',
             'isCrossDomainParent = parentLocationWrapper === parentWindow.location || !parentWindow["%hammerhead%"]'
@@ -45,7 +45,10 @@ fs.writeFileSync(
         )
 
         // disable saving to localStorage as we are using a completely different implementation
-        .replace('saveToNativeStorage = function () {', 'saveToNativeStorage = function () {return;')
+        .replace(
+            'saveToNativeStorage = function () {',
+            'saveToNativeStorage = function () {return;'
+        )
 
         // prevent calls to elements on a closed iframe
         .replace('dispatchEvent: function () {', '$& if (!window) return null;')
@@ -91,8 +94,17 @@ fs.writeFileSync(
 fs.writeFileSync(
     path.join(import.meta.dirname, './client/worker-hammerhead.js'),
     fs
-        .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/worker-hammerhead.js'), 'utf8')
-        .replace('proxyLocation.port.toString()', 'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)')
+        .readFileSync(
+            path.join(
+                import.meta.dirname,
+                '../node_modules/testcafe-hammerhead/lib/client/worker-hammerhead.js'
+            ),
+            'utf8'
+        )
+        .replace(
+            'proxyLocation.port.toString()',
+            'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)'
+        )
 );
 
 // fix the
@@ -101,16 +113,31 @@ fs.writeFileSync(
 fs.writeFileSync(
     path.join(import.meta.dirname, './client/transport-worker.js'),
     fs
-    .readFileSync(path.join(import.meta.dirname, '../node_modules/testcafe-hammerhead/lib/client/transport-worker.js'), 'utf8')
-    .replace('proxyLocation.port.toString()', 'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)')
+        .readFileSync(
+            path.join(
+                import.meta.dirname,
+                '../node_modules/testcafe-hammerhead/lib/client/transport-worker.js'
+            ),
+            'utf8'
+        )
+        .replace(
+            'proxyLocation.port.toString()',
+            'proxyLocation.port?.toString() || (proxyLocation.protocol === "https:" ? 443 : 80)'
+        )
 );
 
 const minify = (fileName, newFileName) => {
-    const minified = UglifyJS.minify(fs.readFileSync(path.join(import.meta.dirname, './client', fileName), 'utf8'));
+    const minified = UglifyJS.minify(
+        fs.readFileSync(path.join(import.meta.dirname, './client', fileName), 'utf8')
+    );
     if (minified.error) {
         throw minified.error;
     }
-    fs.writeFileSync(path.join(import.meta.dirname, './client', newFileName), minified.code, 'utf8');
+    fs.writeFileSync(
+        path.join(import.meta.dirname, './client', newFileName),
+        minified.code,
+        'utf8'
+    );
 };
 
 minify('rammerhead.js', 'rammerhead.min.js');

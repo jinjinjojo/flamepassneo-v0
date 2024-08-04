@@ -71,7 +71,9 @@ class RammerheadLogging {
     _getLogRank(level) {
         const index = LOG_LEVELS.indexOf(level);
         if (index === -1) {
-            throw new TypeError(`Invalid log level '${level}'. Valid log levels: ${LOG_LEVELS.join(', ')}`);
+            throw new TypeError(
+                `Invalid log level '${level}'. Valid log levels: ${LOG_LEVELS.join(', ')}`
+            );
         }
         return index;
     }
