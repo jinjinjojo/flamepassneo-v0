@@ -1,7 +1,7 @@
-const { Session } = require('testcafe-hammerhead');
-const UploadStorage = require('testcafe-hammerhead/lib/upload/storage');
-const generateId = require('../util/generateId');
-const StrShuffler = require('../util/StrShuffler');
+import { Session } from 'testcafe-hammerhead';
+import UploadStorage from 'testcafe-hammerhead/lib/upload/storage';
+import generateId from '../util/generateId';
+import StrShuffler from '../util/StrShuffler';
 
 // disable UploadStorage, a testcafe testing feature we do not need
 const emptyFunc = () => {};
@@ -133,4 +133,4 @@ class RammerheadSession extends Session {
     }
 }
 
-module.exports = RammerheadSession;
+export default RammerheadSession;

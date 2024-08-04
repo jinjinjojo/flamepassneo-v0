@@ -74,4 +74,4 @@ StrShuffler.baseDictionary = baseDictionary;
 StrShuffler.shuffledIndicator = shuffledIndicator;
 StrShuffler.generateDictionary = generateDictionary;
 
-module.exports = StrShuffler;
+export default StrShuffler;

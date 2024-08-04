@@ -1,11 +1,11 @@
-const config = require('../config');
-const getSessionId = require('../util/getSessionId');
+import config from '../config';
+import getSessionId from '../util/getSessionId';
 
 /**
  * @param {import('../classes/RammerheadProxy')} proxyServer
  * @param {import('../classes/RammerheadSessionAbstractStore')} sessionStore
  */
-module.exports = function setupPipeline(proxyServer, sessionStore) {
+export default function setupPipeline(proxyServer, sessionStore) {
     // remove headers defined in config.js
     proxyServer.addToOnRequestPipeline((req, res, _serverInfo, isRoute) => {
         if (isRoute) return; // only strip those that are going to the proxy destination website

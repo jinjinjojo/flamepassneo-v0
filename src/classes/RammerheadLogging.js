@@ -77,4 +77,4 @@ class RammerheadLogging {
     }
 }
 
-module.exports = RammerheadLogging;
+export default RammerheadLogging;

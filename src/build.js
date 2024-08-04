@@ -1,8 +1,8 @@
-require('dotenv-flow').config();
+import('dotenv-flow').config();
 
-const path = require('path');
-const fs = require('fs');
-const UglifyJS = require('uglify-js');
+import path from 'path';
+import fs from 'fs';
+import UglifyJS from 'uglify-js';
 
 // modify unmodifable items that cannot be hooked in rammerhead.js
 fs.writeFileSync(

@@ -1,6 +1,6 @@
-const mime = require('mime');
-const fs = require('fs');
-const path = require('path');
+import mime from 'mime';
+import fs from 'fs';
+import path from 'path';
 
 // these routes are reserved by hammerhead and rammerhead
 const forbiddenRoutes = [
@@ -62,4 +62,4 @@ function addStaticFilesToProxy(proxy, staticDir, rootPath = '/', shouldIgnoreFil
     });
 }
 
-module.exports = addStaticFilesToProxy;
+export default addStaticFilesToProxy;

@@ -1,4 +1,4 @@
-const LRUCache = require('lru-cache');
+import LRUCache from 'lru-cache';
 
 class RammerheadJSMemCache {
   constructor(jsCacheSize) {
@@ -15,4 +15,4 @@ class RammerheadJSMemCache {
   }
 }
 
-module.exports = RammerheadJSMemCache;
+export default RammerheadJSMemCache;

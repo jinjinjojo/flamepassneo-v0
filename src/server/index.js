@@ -1,18 +1,18 @@
-const cluster = require('cluster');
+import cluster from 'cluster';
 if (cluster.isMaster) {
     require('dotenv-flow').config();
 }
 
-const exitHook = require('async-exit-hook');
-const sticky = require('sticky-session-custom');
-const RammerheadProxy = require('../classes/RammerheadProxy');
-const addStaticDirToProxy = require('../util/addStaticDirToProxy');
-const RammerheadSessionFileCache = require('../classes/RammerheadSessionFileCache');
-const config = require('../config');
-const setupRoutes = require('./setupRoutes');
-const setupPipeline = require('./setupPipeline');
-const RammerheadLogging = require('../classes/RammerheadLogging');
-const getSessionId = require('../util/getSessionId');
+import exitHook from 'async-exit-hook';
+import sticky from 'sticky-session-custom';
+import RammerheadProxy from '../classes/RammerheadProxy';
+import addStaticDirToProxy from '../util/addStaticDirToProxy';
+import RammerheadSessionFileCache from '../classes/RammerheadSessionFileCache';
+import config from '../config';
+import setupRoutes from './setupRoutes';
+import setupPipeline from './setupPipeline';
+import RammerheadLogging from '../classes/RammerheadLogging';
+import getSessionId from '../util/getSessionId';
 
 const prefix = config.enableWorkers ? (cluster.isMaster ? '(master) ' : `(${cluster.worker.id}) `) : '';
 
@@ -127,4 +127,4 @@ if (config.enableWorkers) {
 
 // if you want to just extend the functionality of this proxy server, you can
 // easily do so using this. mainly used for debugging
-module.exports = proxyServer;
+export default proxyServer;

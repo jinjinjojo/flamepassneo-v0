@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const RammerheadSessionAbstractStore = require('./RammerheadSessionAbstractStore');
-const RammerheadSession = require('./RammerheadSession');
-const RammerheadLogging = require('../classes/RammerheadLogging');
+import fs from 'fs';
+import path from'path';
+import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore';
+import RammerheadSession from './RammerheadSession';
+import RammerheadLogging from '../classes/RammerheadLogging';
 
 // rh = rammerhead. extra f to distinguish between rhsession (folder) and rhfsession (file)
 const sessionFileExtension = '.rhfsession';
@@ -234,4 +234,4 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
     }
 }
 
-module.exports = RammerheadSessionFileCache;
+export default RammerheadSessionFileCache;

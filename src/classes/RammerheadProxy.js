@@ -1,23 +1,23 @@
-const http = require('http');
-const https = require('https');
-const stream = require('stream');
-const fs = require('fs');
-const path = require('path');
-const { getPathname } = require('testcafe-hammerhead/lib/utils/url');
-const { Proxy } = require('testcafe-hammerhead');
-const WebSocket = require('ws');
-const httpResponse = require('../util/httpResponse');
-const streamToString = require('../util/streamToString');
-const URLPath = require('../util/URLPath');
-const RammerheadLogging = require('../classes/RammerheadLogging');
-const RammerheadJSMemCache = require('./RammerheadJSMemCache.js');
+import http from 'http';
+import https from 'https';
+import stream from 'stream';
+import fs from 'fs';
+import path from 'path';
+import { getPathname } from 'testcafe-hammerhead/lib/utils/url';
+import { Proxy } from 'testcafe-hammerhead';
+import WebSocket from 'ws';
+import httpResponse from '../util/httpResponse';
+import streamToString from '../util/streamToString';
+import URLPath from '../util/URLPath';
+import RammerheadLogging from '../classes/RammerheadLogging';
+import RammerheadJSMemCache from './RammerheadJSMemCache.js';
 
-require('../util/fixCorsHeader');
-require('../util/fixCorsMissingOriginHeader.js');
-require('../util/fixWebsocket');
-require('../util/addMoreErrorGuards');
-require('../util/addUrlShuffling');
-require('../util/patchAsyncResourceProcessor');
+import('../util/fixCorsHeader');
+import('../util/fixCorsMissingOriginHeader.js');
+import('../util/fixWebsocket');
+import('../util/addMoreErrorGuards');
+import('../util/addUrlShuffling');
+import('../util/patchAsyncResourceProcessor');
 let addJSDiskCache = function (jsCache) {
     require('../util/addJSDiskCache')(jsCache);
     // modification only works once
@@ -613,4 +613,4 @@ class RammerheadProxy extends Proxy {
     }
 }
 
-module.exports = RammerheadProxy;
+export default RammerheadProxy;

@@ -98,4 +98,4 @@ class RammerheadSessionAbstractStore {
     close() {}
 }
 
-module.exports = RammerheadSessionAbstractStore;
+export default RammerheadSessionAbstractStore;

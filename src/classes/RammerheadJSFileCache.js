@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const cluster = require('cluster');
-const LRUCache = require('lru-cache');
+import fs from 'fs';
+import path from 'path';
+import cluster from 'cluster';
+import LRUCache from 'lru-cache';
 
 class RammerheadJSFileCache {
   constructor(diskJsCachePath, jsCacheSize, maxItems, enableWorkerMode) {
@@ -137,4 +137,4 @@ class RammerheadJSFileCache {
   }
 }
 
-module.exports = RammerheadJSFileCache;
+export default RammerheadJSFileCache;

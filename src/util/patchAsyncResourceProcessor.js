@@ -1,13 +1,13 @@
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/index.ts
 
-const url = require('url');
-const pageProcessor = require('testcafe-hammerhead/lib/processing/resources/page');
-const manifestProcessor = require('testcafe-hammerhead/lib/processing/resources/manifest');
-const scriptProcessor = require('testcafe-hammerhead/lib/processing/resources/script');
-const stylesheetProcessor = require('testcafe-hammerhead/lib/processing/resources/stylesheet');
-const urlUtil = require('testcafe-hammerhead/lib/utils/url');
-const { encodeContent, decodeContent } = require('testcafe-hammerhead/lib/processing/encoding');
-const { platform } = require('os');
+import url from 'url';
+import pageProcessor from 'testcafe-hammerhead/lib/processing/resources/page';
+import manifestProcessor from 'testcafe-hammerhead/lib/processing/resources/manifest';
+import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script';
+import stylesheetProcessor from 'testcafe-hammerhead/lib/processing/resources/stylesheet';
+import urlUtil from 'testcafe-hammerhead/lib/utils/url';
+import { encodeContent, decodeContent } from 'testcafe-hammerhead/lib/processing/encoding';
+import { platform } from 'os';
 
 const IS_WIN = platform() === 'win32';
 const DISK_RE = /^[A-Za-z]:/;
@@ -42,7 +42,7 @@ function getResourceUrlReplacer(ctx) {
     };
 }
 
-require('testcafe-hammerhead/lib/processing/resources/index').process = async function process(ctx) {
+import('testcafe-hammerhead/lib/processing/resources/index').process = async function process(ctx) {
     const { destResBody, contentInfo } = ctx;
     const { encoding, charset } = contentInfo;
 

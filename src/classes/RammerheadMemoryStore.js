@@ -1,6 +1,6 @@
-const RammerheadLogging = require('./RammerheadLogging');
-const RammerheadSession = require('./RammerheadSession');
-const RammerheadSessionAbstractStore = require('./RammerheadSessionAbstractStore');
+import RammerheadLogging from './RammerheadLogging';
+import RammerheadSession from './RammerheadSession';
+import RammerheadSessionAbstractStore from './RammerheadSessionAbstractStore';
 
 class RammerheadSessionMemoryStore extends RammerheadSessionAbstractStore {
     /**
@@ -104,4 +104,4 @@ class RammerheadSessionMemoryStore extends RammerheadSessionAbstractStore {
     }
 }
 
-module.exports = RammerheadSessionMemoryStore;
+export default RammerheadSessionMemoryStore;

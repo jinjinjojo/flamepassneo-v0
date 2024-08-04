@@ -10,4 +10,4 @@ class RammerheadJSAbstractCache {
   }
 }
 
-module.exports = RammerheadJSAbstractCache;
+export default RammerheadJSAbstractCache;

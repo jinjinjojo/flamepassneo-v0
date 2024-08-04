@@ -1,12 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-const os = require('os');
-const RammerheadJSMemCache = require('./classes/RammerheadJSMemCache.js');
-const RammerheadJSFileCache = require('./classes/RammerheadJSFileCache.js');
+import path from 'path';
+import fs from 'fs';
+import os from 'os';
+import RammerheadJSMemCache from './classes/RammerheadJSMemCache.js';
+import RammerheadJSFileCache from './classes/RammerheadJSFileCache.js';
 
 const enableWorkers = os.cpus().length !== 1;
 
-module.exports = {
+export default {
     //// HOSTING CONFIGURATION ////
 
     bindingAddress: '127.0.0.1',
@@ -32,7 +32,7 @@ module.exports = {
     // },
 
     // enforce a password for creating new sessions. set to null to disable
-    password: 'sharkie4life',
+    password: null,
 
     // disable or enable localStorage sync (turn off if clients send over huge localStorage data, resulting in huge memory usages)
     disableLocalStorageSync: false,
@@ -53,18 +53,11 @@ module.exports = {
 
     //// REWRITE HEADER CONFIGURATION ////
 
-    // removes reverse proxy headers
-    // cloudflare example:
-    // stripClientHeaders: ['cf-ipcountry', 'cf-ray', 'x-forwarded-proto', 'cf-visitor', 'cf-connecting-ip', 'cdn-loop', 'x-forwarded-for'],
-    stripClientHeaders: [],
+    stripClientHeaders: ['cf-ipcountry', 'cf-ray', 'x-forwarded-proto', 'cf-visitor', 'cf-connecting-ip', 'cdn-loop', 'x-forwarded-for'],
     // if you want to modify response headers, like removing the x-frame-options header, do it like so:
-    // rewriteServerHeaders: {
-    //     // you can also specify a function to modify/add the header using the original value (undefined if adding the header)
-    //     // 'x-frame-options': (originalHeaderValue) => '',
-    //     'x-frame-options': null, // set to null to tell rammerhead that you want to delete it
-    // },
-    rewriteServerHeaders: {},
-
+    rewriteServerHeaders: {
+        'x-frame-options': null, // set to null to tell rammerhead that you want to delete it
+    },
     //// SESSION STORE CONFIG ////
 
     // see src/classes/RammerheadSessionFileCache.js for more details and options

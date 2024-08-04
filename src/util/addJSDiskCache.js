@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 let cacheGet = async (_key) => {
     throw new TypeError('cannot cache get: must initialize cache settings first');
@@ -11,7 +11,7 @@ let cacheSet = async (_key, _value) => {
  * 
  * @param {import('../classes/RammerheadJSAbstractCache.js')} jsCache 
  */
-module.exports = async function (jsCache) {
+export default async function (jsCache) {
     const md5 = (data) => crypto.createHash('md5').update(data).digest('hex');
 
     cacheGet = async (key) => await jsCache.get(md5(key));
@@ -24,10 +24,10 @@ module.exports = async function (jsCache) {
 // patch ScriptResourceProcessor
 // https://github.com/DevExpress/testcafe-hammerhead/blob/47f8b6e370c37f2112fd7f56a3d493fbfcd7ec99/src/processing/resources/script.ts#L21
 
-const scriptProcessor = require('testcafe-hammerhead/lib/processing/resources/script');
-const { processScript } = require('testcafe-hammerhead/lib/processing/script');
-const { updateScriptImportUrls } = require('testcafe-hammerhead/lib/utils/url');
-const BUILTIN_HEADERS = require('testcafe-hammerhead/lib/request-pipeline/builtin-header-names');
+import scriptProcessor from 'testcafe-hammerhead/lib/processing/resources/script';
+import { processScript } from 'testcafe-hammerhead/lib/processing/script';
+import { updateScriptImportUrls } from 'testcafe-hammerhead/lib/utils/url';
+import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names';
 
 scriptProcessor.__proto__.processResource = async function processResource(script, ctx, _charset, urlReplacer) {
     if (!script) return script;

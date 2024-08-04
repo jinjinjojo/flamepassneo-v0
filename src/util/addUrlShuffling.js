@@ -1,6 +1,6 @@
-const RequestPipelineContext = require('testcafe-hammerhead/lib/request-pipeline/context');
-const StrShuffler = require('./StrShuffler');
-const getSessionId = require('./getSessionId');
+import RequestPipelineContext from 'testcafe-hammerhead/lib/request-pipeline/context';
+import StrShuffler from './StrShuffler';
+import getSessionId from './getSessionId';
 
 const replaceUrl = (url, replacer) => {
     //        regex:              https://google.com/    sessionid/   url
@@ -10,7 +10,7 @@ const replaceUrl = (url, replacer) => {
 };
 
 // unshuffle incoming url //
-const BUILTIN_HEADERS = require('testcafe-hammerhead/lib/request-pipeline/builtin-header-names');
+import BUILTIN_HEADERS from 'testcafe-hammerhead/lib/request-pipeline/builtin-header-names';
 const _dispatch = RequestPipelineContext.prototype.dispatch;
 RequestPipelineContext.prototype.dispatch = function (openSessions) {
     let sessionId = getSessionId(this.req.url);
@@ -45,7 +45,7 @@ RequestPipelineContext.prototype.toProxyUrl = function (...args) {
 };
 
 // unshuffle task.js referer header
-const Proxy = require('testcafe-hammerhead/lib/proxy/index');
+import Proxy from 'testcafe-hammerhead/lib/proxy/index';
 const __onTaskScriptRequest = Proxy.prototype._onTaskScriptRequest;
 Proxy.prototype._onTaskScriptRequest = async function _onTaskScriptRequest(req, ...args) {
     const referer = req.headers[BUILTIN_HEADERS.referer];
@@ -62,7 +62,7 @@ Proxy.prototype._onTaskScriptRequest = async function _onTaskScriptRequest(req, 
 };
 
 // don't shuffle action urls (because we don't get to control the rewriting when the user submits the form)
-const DomProcessor = require('testcafe-hammerhead/lib/processing/dom/index');
+import DomProcessor from 'testcafe-hammerhead/lib/processing/dom/index';
 const __processUrlAttrs = DomProcessor.prototype._processUrlAttrs;
 DomProcessor.prototype._processUrlAttrs = function _processUrlAttrs(el, urlReplacer, pattern) {
     try {

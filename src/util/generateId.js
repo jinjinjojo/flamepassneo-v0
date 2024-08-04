@@ -1,3 +1,3 @@
-const uuid = require('uuid').v4;
+const uuid = import('uuid').v4;
 
-module.exports = () => uuid().replace(/-/g, '');
+export default () => uuid().replace(/-/g, '');

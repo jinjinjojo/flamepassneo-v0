@@ -1,7 +1,7 @@
 /**
  * for lazy people who don't want to type out `new URL('http://blah' + req.url).searchParams.get(ugh)` all the time
  */
-module.exports = class URLPath extends URL {
+export default class URLPath extends URL {
     /**
      * @param {string} path - /site/path
      */

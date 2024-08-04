@@ -1,9 +1,9 @@
-const generateId = require('../util/generateId');
-const URLPath = require('../util/URLPath');
-const httpResponse = require('../util/httpResponse');
-const config = require('../config');
-const StrShuffler = require('../util/StrShuffler');
-const RammerheadSession = require('../classes/RammerheadSession');
+import generateId from '../util/generateId';
+import URLPath from '../util/URLPath';
+import httpResponse from '../util/httpResponse';
+import config from '../config';
+import StrShuffler from '../util/StrShuffler';
+import RammerheadSession from '../classes/RammerheadSession';
 
 /**
  *
@@ -11,7 +11,7 @@ const RammerheadSession = require('../classes/RammerheadSession');
  * @param {import('../classes/RammerheadSessionAbstractStore')} sessionStore
  * @param {import('../classes/RammerheadLogging')} logger
  */
-module.exports = function setupRoutes(proxyServer, sessionStore, logger) {
+export default function setupRoutes(proxyServer, sessionStore, logger) {
     const isNotAuthorized = (req, res) => {
         if (!config.password) return;
         const { pwd } = new URLPath(req.url).getParams();

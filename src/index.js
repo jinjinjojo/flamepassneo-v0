@@ -1,18 +1,18 @@
-const RammerheadProxy = require('./classes/RammerheadProxy');
-const RammerheadLogging = require('./classes/RammerheadLogging');
-const RammerheadSession = require('./classes/RammerheadSession');
-const RammerheadSessionAbstractStore = require('./classes/RammerheadSessionAbstractStore');
-const RammerheadSessionFileCache = require('./classes/RammerheadSessionFileCache');
-const generateId = require('./util/generateId');
-const addStaticFilesToProxy = require('./util/addStaticDirToProxy');
-const RammerheadSessionMemoryStore = require('./classes/RammerheadMemoryStore');
-const StrShuffler = require('./util/StrShuffler');
-const URLPath = require('./util/URLPath');
-const RammerheadJSAbstractCache = require('./classes/RammerheadJSAbstractCache.js');
-const RammerheadJSFileCache = require('./classes/RammerheadJSFileCache.js');
-const RammerheadJSMemCache = require('./classes/RammerheadJSMemCache.js');
+import RammerheadProxy from './classes/RammerheadProxy';
+import RammerheadLogging from './classes/RammerheadLogging';
+import RammerheadSession from './classes/RammerheadSession';
+import RammerheadSessionAbstractStore from './classes/RammerheadSessionAbstractStore';
+import RammerheadSessionFileCache from './classes/RammerheadSessionFileCache';
+import generateId from './util/generateId';
+import addStaticFilesToProxy from './util/addStaticDirToProxy';
+import RammerheadSessionMemoryStore from './classes/RammerheadMemoryStore';
+import StrShuffler from './util/StrShuffler';
+import URLPath from './util/URLPath';
+import RammerheadJSAbstractCache from './classes/RammerheadJSAbstractCache.js';
+import RammerheadJSFileCache from './classes/RammerheadJSFileCache.js';
+import RammerheadJSMemCache from './classes/RammerheadJSMemCache.js';
 
-module.exports = {
+export default {
     RammerheadProxy,
     RammerheadLogging,
     RammerheadSession,

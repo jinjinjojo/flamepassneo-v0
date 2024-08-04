@@ -1,14 +1,14 @@
 // fixes unpipe error and crashes resulting from http requests to websocket proxy endpoint
 
-const stages = require('testcafe-hammerhead/lib/request-pipeline/stages');
-const { Duplex } = require('stream');
+import stages from 'testcafe-hammerhead/lib/request-pipeline/stages';
+import { Duplex } from 'stream';
 
 stages.unshift(function fixWebsocket(ctx) {
     ctx.isWebSocket = ctx.res instanceof Duplex;
 });
 
 // fixes EPIPE error when trying to write head to a closed socket
-const hammerheadWS = require('testcafe-hammerhead/lib/request-pipeline/websocket');
+import hammerheadWS from 'testcafe-hammerhead/lib/request-pipeline/websocket';
 const respondOnWebSocket = hammerheadWS.respondOnWebSocket;
 hammerheadWS.respondOnWebSocket = function (ctx) {
     ctx.res.on('error', (err) => {
