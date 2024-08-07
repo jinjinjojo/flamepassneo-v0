@@ -4,7 +4,11 @@ node_modules/
 package=lock.json
 pnpm-lock.yaml
 yarn.lock
+**/dist/**
 ~/
+
+rammerhead-packages/*.d.ts
+rammerhead-packages/*.d.ts.map
 
 #Rammerhead specific stuff
 # don't commit generated builds or env files

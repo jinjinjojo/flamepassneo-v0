@@ -3,11 +3,10 @@
   "version": "1.2.64",
   "description": "User friendly web proxy powered by testcafe-hammerhead",
   "main": "src/index.js",
-  "type": "module",
   "private": true,
   "scripts": {
     "start": "node src/server.js",
-    "build": "node src/build.js",
+    "build": "node src/build.mjs && babel src/ --out-dir dist/ --copy-files",
     "bstart": "npm run build && npm run start",
     "test": "npm run format && npm run lint && npm run build",
     "lint": "eslint -c .eslintrc.json --ext .js src",
@@ -37,7 +36,11 @@
     "babel-eslint": "^10.1.0",
     "dotenv-flow": "^3.2.0",
     "eslint": "^7.32.0",
-    "npm-force-resolutions": "0.0.10"
+    "npm-force-resolutions": "0.0.10",
+    "@babel/cli": "^7.24.5",
+    "@babel/core": "^7.24.5",
+    "@babel/plugin-syntax-import-attributes": "^7.24.1",
+    "@babel/preset-env": "^7.24.5"
   },
   "resolutions": {
     "tmp": "0.2.1"

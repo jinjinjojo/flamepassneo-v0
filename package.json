@@ -24,8 +24,10 @@
         "backend"
     ],
     "license": "MIT",
+    "packageManager": "pnpm@9.7.0",
     "dependencies": {
-        "rammerhead": "workspace:*"
+        "rammerhead": "workspace:*",
+        "@rubynetwork/rammerhead": "workspace:*"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.8.3",
