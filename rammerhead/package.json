@@ -1,5 +1,5 @@
 {
-  "name": "@rubynetwork/rammerhead",
+  "name": "rammerhead",
   "version": "1.2.64",
   "description": "User friendly web proxy powered by testcafe-hammerhead",
   "main": "src/index.js",
@@ -10,9 +10,6 @@
     "bstart": "npm run build && npm run start",
     "test": "npm run format && npm run lint && npm run build",
     "lint": "eslint -c .eslintrc.json --ext .js src",
-    "format:code": "biome format . --write",
-    "format:imports": "biome check . --write",
-    "format": "npm run format:code && npm run format:imports",
     "clientes5": "es-check es5 src/client/*.js public/**/*.js"
   },
   "repository": {
@@ -36,7 +33,6 @@
     "ws": "^8.2.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
     "babel-eslint": "^10.1.0",
     "dotenv-flow": "^3.2.0",
     "eslint": "^7.32.0",
