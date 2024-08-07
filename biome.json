@@ -1,7 +1,7 @@
 {
     "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
     "files": {
-        "ignore": ["~/", "**/src/client/*.min.*", "**/src/client/hammerhead.js", ".github/**"],
+        "ignore": ["~/", "**/rammerhead/src/client/*.min.*", "**/rammerhead/src/client/hammerhead.js", ".github/**"],
         "include": ["**/**"]
     },
     "formatter": {

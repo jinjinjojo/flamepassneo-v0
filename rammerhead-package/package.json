@@ -1,0 +1,19 @@
+{
+    "name": "@rubynetwork/rammerhead",
+    "version": "1.0.0",
+    "description": "Monorepo for easy setup of Rammerhead",
+    "contributors": [
+        "MotorTruck1221 (https://github.com/motortruck1221)"
+    ],
+    "keywords": [
+        "monorepo",
+        "javascript",
+        "typescript",
+        "cli",
+        "rammerhead",
+        "proxy",
+        "backend"
+    ],
+    "license": "MIT",
+    "dependencies": {}
+}
