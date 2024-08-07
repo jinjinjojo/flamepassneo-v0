@@ -12,7 +12,7 @@
                 "targets": {
                     "node": "18"
                 },
-                //"modules": false
+                "modules": false
             }
         ]
     ],

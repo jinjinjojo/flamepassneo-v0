@@ -27,7 +27,7 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
      * @param {number} options.staleCleanupOptions.staleCheckInterval
      */
     constructor({
-        saveDirectory = path.join(__dirname, '../../sessions'),
+        saveDirectory = path.join(import.meta.dirname, '../../sessions'),
         logger = new RammerheadLogging({ logLevel: 'disabled' }),
         cacheTimeout = 1000 * 60 * 20, // 20 minutes
         cacheCheckInterval = 1000 * 60 * 10, // 10 minutes,

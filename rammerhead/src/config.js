@@ -12,7 +12,7 @@ export default {
     bindingAddress: '127.0.0.1',
     port: 8080,
     crossDomainPort: 8081,
-    publicDir: path.join(__dirname, '../public'), // set to null to disable
+    publicDir: path.join(import.meta.dirname, '../public'), // set to null to disable
 
     // enable or disable multithreading
     enableWorkers,
@@ -49,7 +49,7 @@ export default {
     // recommended: 50mb for memory, 5gb for disk
     // jsCache: new RammerheadJSMemCache(5 * 1024 * 1024),
     jsCache: new RammerheadJSFileCache(
-        path.join(__dirname, '../cache-js'),
+        path.join(import.meta.dirname, '../cache-js'),
         5 * 1024 * 1024 * 1024,
         50000,
         enableWorkers
@@ -80,7 +80,7 @@ export default {
 
     // see src/classes/RammerheadSessionFileCache.js for more details and options
     fileCacheSessionConfig: {
-        saveDirectory: path.join(__dirname, '../sessions'),
+        saveDirectory: path.join(import.meta.dirname, '../sessions'),
         cacheTimeout: 1000 * 60 * 20, // 20 minutes
         cacheCheckInterval: 1000 * 60 * 10, // 10 minutes
         deleteUnused: true,
@@ -105,5 +105,5 @@ export default {
     getIPProxy: req => (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim(),
 };
 
-if (fs.existsSync(path.join(__dirname, '../config.js')))
+if (fs.existsSync(path.join(import.meta.dirname, '../config.js')))
     Object.assign(module.exports, require('../config'));
