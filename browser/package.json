@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rubynetwork/rammerhead.git"
+    "url": "git+https://github.com/ruby-network/rammerhead.git"
   },
   "keywords": [
     "monorepo",
@@ -26,9 +26,9 @@
   "author": "MotorTruck1221",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rubynetwork/rammerhead/issues"
+    "url": "https://github.com/ruby-network/rammerhead/issues"
   },
-  "homepage": "https://github.com/rubynetwork/rammerhead#readme",
+  "homepage": "https://github.com/ruby-network/rammerhead#readme",
   "devDependencies": {
     "@farmfe/cli": "^1.0.3",
     "@farmfe/core": "^1.3.12",
