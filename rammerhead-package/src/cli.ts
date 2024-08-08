@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Command } from 'commander';
 import { startServer } from './http.js';
 import { logLevel } from './rammerhead.js';
