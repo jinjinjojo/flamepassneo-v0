@@ -27,7 +27,8 @@
     "packageManager": "pnpm@9.7.0",
     "dependencies": {
         "@rubynetwork/rh": "workspace:*",
-        "@rubynetwork/rammerhead": "workspace:*"
+        "@rubynetwork/rammerhead": "workspace:*",
+        "@rubynetwork/rammerhead-browser": "workspace:*"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.8.3",

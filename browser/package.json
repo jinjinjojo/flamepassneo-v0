@@ -1,16 +1,13 @@
 {
-  "name": "@rubynetwork/rammerhead",
-  "version": "1.3.0",
-  "description": "Easily use and run Rammerhead",
+  "name": "@rubynetwork/rammerhead-browser",
+  "version": "1.0.0",
+  "description": "Easily use Rammerhead in your browser",
   "main": "dist/index.js",
   "type": "module",
-  "bin": {
-    "@rubynetwork/rammerhead": "dist/cli.js"
-  },
   "scripts": {
     "types": "tsc --declaration --emitDeclarationOnly --outDir dist/ --declarationMap",
     "type-check": "tsc --noEmit",
-    "build": "babel src/ --out-dir dist/ --extensions '.ts' --copy-files",
+    "build": "farm build",
     "release": "npm publish --access public"
   },
   "repository": {
@@ -33,18 +30,10 @@
   },
   "homepage": "https://github.com/rubynetwork/rammerhead#readme",
   "devDependencies": {
-    "@babel/cli": "^7.24.5",
-    "@babel/core": "^7.24.5",
-    "@babel/plugin-syntax-import-attributes": "^7.24.1",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/preset-typescript": "^7.24.1",
+    "@farmfe/cli": "^1.0.3",
+    "@farmfe/core": "^1.3.12",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.12.10",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "commander": "^12.0.0",
-    "picocolors": "^1.0.1",
-    "@rubynetwork/rh": "latest"
   }
 }
