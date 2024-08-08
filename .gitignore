@@ -6,6 +6,7 @@ pnpm-lock.yaml
 yarn.lock
 **/dist/**
 ~/
+**/turbo/**
 
 rammerhead-packages/*.d.ts
 rammerhead-packages/*.d.ts.map
