@@ -5,14 +5,15 @@ import pc from "picocolors";
 interface ServerOptions {
     port: number,
     host: string,
-    logLevel: logLevel
+    logLevel: logLevel,
+    reverseProxy: boolean
 }
 
 function startServer(options: ServerOptions) {
     //create the Rammerhead server!
     const rh = createRammerhead({
         logLevel: options.logLevel,
-        reverseProxy: false,
+        reverseProxy: options.reverseProxy,
         disableLocalStorageSync: false,
         disableHttp2: false
     });

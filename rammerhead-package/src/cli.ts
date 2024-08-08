@@ -6,6 +6,7 @@ interface Flags {
     port: string,
     host: string,
     logLevel: logLevel
+    reverseProxy: boolean
 }
 
 interface Results {
@@ -16,7 +17,8 @@ const defaults: Results = {
     flags: {
         port: '8080',
         host: '0.0.0.0',
-        logLevel: "debug"
+        logLevel: "debug",
+        reverseProxy: false
     }
 }
 
@@ -28,11 +30,13 @@ program.description('Easily start a standalone Rammerhead server');
 program.option('-ho --host <string>', 'Host to listen on', '0.0.0.0');
 program.option('-p, --port <string>', 'Port to listen on', '8080');
 program.option('-l, --loglevel <string>', 'Change the log level (see: documentation)', 'debug');
+program.option('-rp --reverseproxy', 'Whether or not this server is behind a reverse proxy', false);
 program.parse(process.argv);
 results.flags = program.opts();
 
 startServer({
     port: parseInt(results.flags.port) || 8080,
     host: results.flags.host,
-    logLevel: results.flags.logLevel || 'debug'
+    logLevel: results.flags.logLevel || 'debug',
+    reverseProxy: results.flags.reverseProxy || false
 })
