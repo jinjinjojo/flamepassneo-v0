@@ -26,7 +26,7 @@
     "license": "MIT",
     "packageManager": "pnpm@9.7.0",
     "dependencies": {
-        "rammerhead": "workspace:*",
+        "@rubynetwork/rh": "workspace:*",
         "@rubynetwork/rammerhead": "workspace:*"
     },
     "devDependencies": {

@@ -3,4 +3,4 @@
 > @rubynetwork/rammerhead@1.3.0 build /home/motortruck1221/code/rammerhead-new/rammerhead-package
 > babel src/ --out-dir dist/ --extensions '.ts' --copy-files
 
-Successfully compiled 3 files with Babel (386ms).
+Successfully compiled 4 files with Babel (669ms).

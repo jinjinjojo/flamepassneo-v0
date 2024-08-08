@@ -29,9 +29,9 @@
   "author": "MotorTruck1221",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/motortruck1221/dreamland-stuff/issues"
+    "url": "https://github.com/rubynetwork/rammerhead/issues"
   },
-  "homepage": "https://github.com/motortruck1221/dreamland-stuff#readme",
+  "homepage": "https://github.com/rubynetwork/rammerhead#readme",
   "devDependencies": {
     "@babel/cli": "^7.24.5",
     "@babel/core": "^7.24.5",
@@ -44,7 +44,8 @@
   },
   "dependencies": {
     "commander": "^12.0.0",
+    "esbuild": "^0.23.0",
     "picocolors": "^1.0.1",
-    "rammerhead": "workspace:*"
+    "@rubynetwork/rh": "latest"
   }
 }

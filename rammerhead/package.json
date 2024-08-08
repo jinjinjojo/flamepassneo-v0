@@ -1,9 +1,8 @@
 {
-  "name": "rammerhead",
-  "version": "1.2.64",
+  "name": "@rubynetwork/rh",
+  "version": "1.2.67",
   "description": "User friendly web proxy powered by testcafe-hammerhead",
   "main": "src/index.js",
-  "private": true,
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
@@ -11,7 +10,9 @@
     "bstart": "npm run build && npm run start",
     "test": "npm run format && npm run lint && npm run build",
     "lint": "eslint -c .eslintrc.json --ext .js src",
-    "clientes5": "es-check es5 src/client/*.js public/**/*.js"
+    "clientes5": "es-check es5 src/client/*.js public/**/*.js",
+    "release": "npm publish --access public",
+    "postinstall": "node src/setup.js"
   },
   "repository": {
     "type": "git",
