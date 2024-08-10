@@ -1,17 +1,16 @@
 {
   "name": "@rubynetwork/rammerhead-browser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Easily use Rammerhead in your browser",
   "type": "module",
   "browser": "./dist/index.js",
   "exports": {
-    ".": "./dist/rammerhead.js",
-    "bundle": "./dist/index.js"
+    ".": "./dist/rammerhead.js"
   },
   "scripts": {
     "types": "tsc --declaration --emitDeclarationOnly --outDir dist/ --declarationMap",
     "type-check": "tsc --noEmit",
-    "build:bundle": "farm build",
+    "build:bundle": "node build.js",
     "build:normal": "babel src/ --out-dir dist/ --extensions '.ts' --copy-files",
     "build": "pnpm run build:bundle && pnpm run build:normal",
     "release": "npm publish --access public"
@@ -42,10 +41,9 @@
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-typescript": "^7.24.1",
     "@farmfe/cli": "^1.0.3",
-    "@farmfe/core": "^1.3.12",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.12.10",
-    "core-js": "3",
+    "esbuild": "^0.23.0",
     "typescript": "^5.4.5"
   }
 }
