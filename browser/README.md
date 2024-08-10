@@ -18,8 +18,7 @@ RammerheadEncode('https://google.com', '/rammer/' /*This option can be ommited i
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- /bundle is the bundled version for browsers! -->
-        <script src="https://unpkg.com/@rubynetwork/rammerhead-browser/bundle" defer />
+        <script src="https://unpkg.com/@rubynetwork/rammerhead-browser" defer />
     </head>
     <body>
         <script>
