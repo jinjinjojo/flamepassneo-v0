@@ -1,4 +1,8 @@
-# rammerhead
+# Rammerhead
+
+- The actual forked version of Rammerhead
+- This package shouldn't be used unless you understand what you are doing!
+- This package is used by @rubynetwork/rammerhead (the package you should probably actually use)
 
 > proxy based on testcafe-hammerhead (password is `sharkie4life`)
 
