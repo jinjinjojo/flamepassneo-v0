@@ -8,7 +8,8 @@ export default defineConfig({
     output: {
       path: 'dist',
       publicPath: '/',
-      targetEnv: 'browser'
+      clean: false,
+      targetEnv: 'browser',
     }
   },
 });

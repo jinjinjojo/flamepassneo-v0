@@ -1,6 +1,6 @@
 {
   "name": "@rubynetwork/rammerhead-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily use Rammerhead in your browser",
   "type": "module",
   "exports": {
@@ -10,7 +10,9 @@
   "scripts": {
     "types": "tsc --declaration --emitDeclarationOnly --outDir dist/ --declarationMap",
     "type-check": "tsc --noEmit",
-    "build": "farm build && babel src/ --out-dir dist/ --extensions '.ts' --copy-files",
+    "build:bundle": "farm build",
+    "build:normal": "babel src/ --out-dir dist/ --extensions '.ts' --copy-files",
+    "build": "pnpm run build:bundle && pnpm run build:normal",
     "release": "npm publish --access public"
   },
   "repository": {
