@@ -9,7 +9,7 @@ export default defineConfig({
       path: 'dist',
       publicPath: '/',
       clean: false,
-      targetEnv: 'browser',
+      targetEnv: 'browser-legacy',
     }
   },
 });

@@ -57,6 +57,9 @@ importers:
       '@types/node':
         specifier: ^20.12.10
         version: 20.14.14
+      core-js:
+        specifier: '3'
+        version: 3.38.0
       typescript:
         specifier: ^5.4.5
         version: 5.5.4
@@ -105,7 +108,7 @@ importers:
     dependencies:
       '@rubynetwork/rh':
         specifier: latest
-        version: 1.2.67(bufferutil@4.0.8)
+        version: 1.2.68(bufferutil@4.0.8)
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -1007,8 +1010,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@rubynetwork/rh@1.2.67':
-    resolution: {integrity: sha512-Iq0fhg/ANSwvFtokZg8tMotka6PiTXmz8xMQjjlIwkSFA4Rox4jFXalseuR7l3+whxyNq1OVlBAhMxB2QaS28g==}
+  '@rubynetwork/rh@1.2.68':
+    resolution: {integrity: sha512-6LSFs2paa0gdgyDNwGr0zXBJQfwb1pS0hkSQHIV5EuQMBcgZiZwTOiSCyo8faeJKHDaglLJCbcJ+XnbK4RyHyQ==}
 
   '@swc/helpers@0.5.12':
     resolution: {integrity: sha512-KMZNXiGibsW9kvZAO1Pam2JPTDBm+KSHMMHWdsyI/1DbIZjT2A6Gy3hblVXUMEDvUAKq+e0vL0X0o54owWji7g==}
@@ -4033,7 +4036,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@rubynetwork/rh@1.2.67(bufferutil@4.0.8)':
+  '@rubynetwork/rh@1.2.68(bufferutil@4.0.8)':
     dependencies:
       async-exit-hook: 2.0.1
       lru-cache: 7.18.3
