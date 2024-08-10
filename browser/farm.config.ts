@@ -10,6 +10,7 @@ export default defineConfig({
       publicPath: '/',
       clean: false,
       targetEnv: 'browser-legacy',
+      format: "cjs"
     }
   },
 });
