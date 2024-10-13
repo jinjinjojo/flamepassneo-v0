@@ -134,7 +134,7 @@ const createRammerhead = (options) => {
         }
     }
 
-    return proxyServer;
+    return proxyServer.server1;
 };
 
 // if you want to just extend the functionality of this proxy server, you can
