@@ -2,16 +2,16 @@
   "name": "rammerhead",
   "version": "1.2.64",
   "description": "User friendly web proxy powered by testcafe-hammerhead",
-  "main": "src/index.js",
+  "main": "server.mts",
   "scripts": {
-    "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
     "start": "node src/server.js",
     "build": "node src/build.js",
     "bstart": "npm run build && npm run start",
     "test": "npm run format && npm run lint && npm run build",
     "lint": "eslint -c .eslintrc.json --ext .js src",
     "format": "prettier --write 'src/**/*.js'",
-    "clientes5": "es-check es5 src/client/*.js public/**/*.js"
+    "clientes5": "es-check es5 src/client/*.js public/**/*.js",
+    "postinstall": "cd src && node build.js"
   },
   "repository": {
     "type": "git",

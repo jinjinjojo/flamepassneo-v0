@@ -7,6 +7,6 @@ const BUILTIN_HEADERS = require('testcafe-hammerhead/lib/request-pipeline/builti
  */
 
 transforms.forcedRequestTransforms[BUILTIN_HEADERS.origin] = (_src, ctx) => {
-  if (ctx.serverInfo.port != ctx.serverInfo.crossDomainPort) return void 0;
-  return ctx.dest.reqOrigin || ctx.dest.domain;
+    if (ctx.serverInfo.port != ctx.serverInfo.crossDomainPort) return void 0;
+    return ctx.dest.reqOrigin || ctx.dest.domain;
 };

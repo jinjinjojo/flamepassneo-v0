@@ -60,7 +60,8 @@ class RammerheadSession extends Session {
         // so now, we undo the change we made that initially was to avoid the whole error mess and a potential source of memory leak.
         // (also we got the "last resort" error handling in addMoreErrorGuards.js so everything is fine)
         // this.isHttp2Disabled = () => true;
-        if (global.rhDisableHttp2) { // globally set from RammerheadProxy.js
+        if (global.rhDisableHttp2) {
+            // globally set from RammerheadProxy.js
             this.disableHttp2();
         }
 

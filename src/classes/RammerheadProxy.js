@@ -21,7 +21,7 @@ require('../util/patchAsyncResourceProcessor');
 let addJSDiskCache = function (jsCache) {
     require('../util/addJSDiskCache')(jsCache);
     // modification only works once
-    addJSDiskCache = () => { };
+    addJSDiskCache = () => {};
 };
 
 /**
@@ -123,7 +123,7 @@ class RammerheadProxy extends Proxy {
             // a downside to using only one proxy server is that crossdomain requests
             // will not be simulated correctly
             proxyHttpOrHttps.createServer = function (...args) {
-                const emptyFunc = () => { };
+                const emptyFunc = () => {};
                 if (onlyOneHttpServer) {
                     // createServer for server1 already called. now we return a mock http server for server2
                     return { on: emptyFunc, listen: emptyFunc, close: emptyFunc };
@@ -197,7 +197,9 @@ class RammerheadProxy extends Proxy {
     }
 
     start() {
-        throw new TypeError('rammerhead does not need a start(). server will automatically start when constructor is initialized.');
+        throw new TypeError(
+            'rammerhead does not need a start(). server will automatically start when constructor is initialized.'
+        );
     }
 
     // add WS routing

@@ -14,9 +14,23 @@ const DISK_RE = /^[A-Za-z]:/;
 const RESOURCE_PROCESSORS = [pageProcessor, manifestProcessor, scriptProcessor, stylesheetProcessor];
 
 function getResourceUrlReplacer(ctx) {
-    return function urlReplacer(resourceUrl, resourceType, charsetAttrValue, baseUrl, isCrossDomain = false, isUrlsSet = false) {
+    return function urlReplacer(
+        resourceUrl,
+        resourceType,
+        charsetAttrValue,
+        baseUrl,
+        isCrossDomain = false,
+        isUrlsSet = false
+    ) {
         if (isUrlsSet)
-            return urlUtil.handleUrlsSet(urlReplacer, resourceUrl, resourceType, charsetAttrValue, baseUrl, isCrossDomain);
+            return urlUtil.handleUrlsSet(
+                urlReplacer,
+                resourceUrl,
+                resourceType,
+                charsetAttrValue,
+                baseUrl,
+                isCrossDomain
+            );
 
         if (!urlUtil.isSupportedProtocol(resourceUrl) && !urlUtil.isSpecialPage(resourceUrl)) return resourceUrl;
 
@@ -51,7 +65,8 @@ require('testcafe-hammerhead/lib/processing/resources/index').process = async fu
 
         const urlReplacer = getResourceUrlReplacer(ctx);
 
-        if (pageProcessor === processor) await ctx.prepareInjectableUserScripts(ctx.eventFactory, ctx.session.injectable.userScripts);
+        if (pageProcessor === processor)
+            await ctx.prepareInjectableUserScripts(ctx.eventFactory, ctx.session.injectable.userScripts);
 
         const decoded = await decodeContent(destResBody, encoding, charset);
 

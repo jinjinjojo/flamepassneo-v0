@@ -108,7 +108,7 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
                 if (this.deleteCorruptedSessions) {
                     this.delete(id);
                     this.logger.warn(`(FileCache.get) ${id} deleted because of bad JSON`);
-            }
+                }
                 return;
             }
         }
