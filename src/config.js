@@ -1,4 +1,5 @@
 const path = require('path');
+const cookie = require('cookie');
 const fs = require('fs');
 const os = require('os');
 const RammerheadJSMemCache = require('./classes/RammerheadJSMemCache.js');
@@ -25,7 +26,24 @@ module.exports = {
     // this function's return object will determine how the client url rewriting will work.
     // set them differently from bindingAddress and port if rammerhead is being served
     // from a reverse proxy.
-    getServerInfo: (req) => ({ hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 8081, protocol: 'https:' }),
+    getServerInfo: (req) => {
+        const { origin_proxy } = cookie.parse(req.headers.cookie || '');
+        console.log(req.socket)
+        let origin;
+        try {
+            origin = new URL(origin_proxy);
+        } catch (err) {
+            console.log(err, req.headers.cookie);
+            origin = new URL(`https://${req.headers.host}`);
+        }
+        const { hostname, port, protocol } = origin;
+        return {
+            hostname,
+            port,
+            crossDomainPort: port,
+            protocol
+        };
+    },
     // example of non-hard-coding the hostname header
     // getServerInfo: (req) => {
     //     return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 8443, protocol: 'https: };
@@ -68,9 +86,7 @@ module.exports = {
     //     // 'x-frame-options': (originalHeaderValue) => '',
     //     'x-frame-options': null, // set to null to tell rammerhead that you want to delete it
     // },
-    rewriteServerHeaders: {
-        'x-frame-options': null
-    },
+    rewriteServerHeaders: {},
 
     //// SESSION STORE CONFIG ////
 

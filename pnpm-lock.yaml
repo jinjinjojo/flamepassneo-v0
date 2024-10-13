@@ -14,6 +14,9 @@ importers:
       async-exit-hook:
         specifier: ^2.0.1
         version: 2.0.1
+      cookie:
+        specifier: ^1.0.1
+        version: 1.0.1
       dotenv-flow:
         specifier: ^3.2.0
         version: 3.3.0
@@ -241,6 +244,10 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+
+  cookie@1.0.1:
+    resolution: {integrity: sha512-Xd8lFX4LM9QEEwxQpF9J9NTUh8pmdJO0cyRJhFiDoLTk2eH8FXlRv2IFGYVadZpqI3j8fhNrSdKCeYPxiAhLXw==}
+    engines: {node: '>=18'}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -1059,6 +1066,8 @@ snapshots:
   commander@5.1.0: {}
 
   concat-map@0.0.1: {}
+
+  cookie@1.0.1: {}
 
   core-util-is@1.0.3: {}
 

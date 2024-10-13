@@ -2,7 +2,7 @@
   "name": "rammerhead",
   "version": "1.2.64",
   "description": "User friendly web proxy powered by testcafe-hammerhead",
-  "main": "server.mts",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "build": "node src/build.js",
@@ -25,6 +25,7 @@
   "homepage": "https://github.com/binary-person/rammerhead#readme",
   "dependencies": {
     "async-exit-hook": "^2.0.1",
+    "cookie": "^1.0.1",
     "dotenv-flow": "^3.2.0",
     "lru-cache": "^7.14.1",
     "mime": "^2.5.2",
