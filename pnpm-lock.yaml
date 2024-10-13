@@ -14,6 +14,9 @@ importers:
       async-exit-hook:
         specifier: ^2.0.1
         version: 2.0.1
+      dotenv-flow:
+        specifier: ^3.2.0
+        version: 3.3.0
       lru-cache:
         specifier: ^7.14.1
         version: 7.18.3
@@ -39,9 +42,6 @@ importers:
       babel-eslint:
         specifier: ^10.1.0
         version: 10.1.0(eslint@7.32.0)
-      dotenv-flow:
-        specifier: ^3.2.0
-        version: 3.3.0
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
