@@ -36,7 +36,7 @@ const createRammerhead = (options) => {
         bindingAddress: config.bindingAddress,
         port: config.port,
         crossDomainPort: config.crossDomainPort,
-        dontListen: config.enableWorkers,
+        dontListen: true,
         ssl: config.ssl,
         getServerInfo: config.getServerInfo,
         disableLocalStorageSync: config.disableLocalStorageSync,
