@@ -6,13 +6,18 @@
   "main": "app/main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-packager . Flamepass --platform=win32 --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.ico --asar=false --prune=false",
-    "build:linux": "electron-packager . Flamepass --platform=linux --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=false"
+    "postinstall": "npm run build:rammerhead",
+    "build:rammerhead": "node src/build.js",
+    "build:win": "npm run build:rammerhead && electron-packager . Flamepass --platform=win32 --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.ico --asar=false --prune=true",
+    "build:linux": "npm run build:rammerhead && electron-packager . Flamepass --platform=linux --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
+    "build:linux-arm": "npm run build:rammerhead && electron-packager . Flamepass --platform=linux --arch=arm64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
+    "build:all": "npm install && npm run build:win && npm run build:linux && npm run build:linux-arm"
   },
   "author": "CarbonBoys",
   "license": "MIT",
   "dependencies": {
     "async-exit-hook": "^2.0.1",
+    "dotenv-flow": "^3.2.0",
     "electron-is-dev": "^2.0.0",
     "lru-cache": "^7.14.1",
     "mime": "^2.5.2",
@@ -24,7 +29,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "dotenv-flow": "^3.2.0",
     "electron": "^29.0.0",
     "electron-packager": "^17.1.1",
     "eslint": "^7.32.0",
@@ -33,5 +37,30 @@
   },
   "resolutions": {
     "tmp": "0.2.1"
+  },
+  "build": {
+    "appId": "com.flamepass.app",
+    "productName": "Flamepass",
+    "files": [
+      "app/**/*",
+      "src/**/*",
+      "sessions/**/*",
+      "cache-js/**/*",
+      "public/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": [
+          "**/*",
+          "!**/node_modules/**/node_modules"
+        ]
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    }
   }
 }

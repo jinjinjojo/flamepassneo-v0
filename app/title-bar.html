@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flamepass</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #222222;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            width: 100%;
+            -webkit-app-region: drag;
+            border-bottom: 1px solid #444444;
+        }
+
+        .title-bar-left {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .app-icon {
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .title-text {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .window-controls {
+            display: flex;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-control {
+            width: 46px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .window-control:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .close-button:hover {
+            background-color: #de5c34;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title-bar">
+        <div class="title-bar-left">
+            <img src="assets/img/logo.png" alt="Flamepass" class="app-icon">
+            <div class="title-text">Flamepass</div>
+        </div>
+        <div class="window-controls">
+            <div class="window-control" id="minimize-button">&#x2012;</div>
+            <div class="window-control" id="maximize-button">&#x2610;</div>
+            <div class="window-control close-button" id="close-button">&#x2715;</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('minimize-button').addEventListener('click', () => {
+            window.electron.minimizeWindow();
+        });
+
+        document.getElementById('maximize-button').addEventListener('click', () => {
+            window.electron.maximizeWindow();
+        });
+
+        document.getElementById('close-button').addEventListener('click', () => {
+            window.electron.closeWindow();
+        });
+    </script>
+</body>
+
+</html>

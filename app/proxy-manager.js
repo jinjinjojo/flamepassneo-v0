@@ -6,9 +6,13 @@ class ProxyManager {
     }
 
     // Create a new session
-    createSession() {
+    createSession(password = '') {
         return new Promise((resolve, reject) => {
-            http.get(`${this.baseUrl}/newsession`, (res) => {
+            const url = password
+                ? `${this.baseUrl}/newsession?pwd=${encodeURIComponent(password)}`
+                : `${this.baseUrl}/newsession`;
+
+            const req = http.get(url, (res) => {
                 if (res.statusCode !== 200) {
                     reject(new Error(`Failed to create session, status: ${res.statusCode}`));
                     return;
@@ -20,10 +24,22 @@ class ProxyManager {
                 });
 
                 res.on('end', () => {
-                    resolve(data.trim());
+                    const sessionId = data.trim();
+                    if (!sessionId) {
+                        reject(new Error('Received empty session ID'));
+                    } else {
+                        resolve(sessionId);
+                    }
                 });
-            }).on('error', (err) => {
+            });
+
+            req.on('error', (err) => {
                 reject(err);
+            });
+
+            req.setTimeout(10000, () => {
+                req.destroy();
+                reject(new Error('Request timeout while creating session'));
             });
         });
     }
@@ -31,7 +47,7 @@ class ProxyManager {
     // Check if a session exists
     sessionExists(sessionId) {
         return new Promise((resolve, reject) => {
-            http.get(`${this.baseUrl}/sessionexists?id=${encodeURIComponent(sessionId)}`, (res) => {
+            const req = http.get(`${this.baseUrl}/sessionexists?id=${encodeURIComponent(sessionId)}`, (res) => {
                 if (res.statusCode !== 200) {
                     reject(new Error(`Failed to check session, status: ${res.statusCode}`));
                     return;
@@ -45,23 +61,33 @@ class ProxyManager {
                 res.on('end', () => {
                     resolve(data === 'exists');
                 });
-            }).on('error', (err) => {
+            });
+
+            req.on('error', (err) => {
                 reject(err);
+            });
+
+            req.setTimeout(10000, () => {
+                req.destroy();
+                reject(new Error('Request timeout while checking session'));
             });
         });
     }
 
     // Edit session settings
-    editSession(sessionId, options = {}) {
-        const { enableShuffling = true, httpProxy = '' } = options;
-
+    editSession(sessionId, httpProxy = '', enableShuffling = true, password = 'sharkie4life') {
         let url = `${this.baseUrl}/editsession?id=${encodeURIComponent(sessionId)}&enableShuffling=${enableShuffling ? '1' : '0'}`;
+
         if (httpProxy) {
             url += `&httpProxy=${encodeURIComponent(httpProxy)}`;
         }
 
+        if (password) {
+            url += `&pwd=${encodeURIComponent(password)}`;
+        }
+
         return new Promise((resolve, reject) => {
-            http.get(url, (res) => {
+            const req = http.get(url, (res) => {
                 if (res.statusCode !== 200) {
                     reject(new Error(`Failed to edit session, status: ${res.statusCode}`));
                     return;
@@ -73,10 +99,21 @@ class ProxyManager {
                 });
 
                 res.on('end', () => {
-                    resolve(data === 'Success');
+                    if (data === 'Success') {
+                        resolve(true);
+                    } else {
+                        reject(new Error(`Unexpected response: ${data}`));
+                    }
                 });
-            }).on('error', (err) => {
+            });
+
+            req.on('error', (err) => {
                 reject(err);
+            });
+
+            req.setTimeout(10000, () => {
+                req.destroy();
+                reject(new Error('Request timeout while editing session'));
             });
         });
     }
