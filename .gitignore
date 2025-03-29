@@ -1,3 +1,8 @@
+# Build output
+/dist
+/out
+
+# Dependencies
 node_modules/
 
 # don't commit generated builds or env files
@@ -5,7 +10,11 @@ src/client/*.min.*
 src/client/hammerhead.js
 src/client/worker-hammerhead.js
 src/client/transport-worker.js
+
+# Environment files
 .env
+.env.local
+.env.*.local
 
 # don't commit session and cache data
 sessions/*
@@ -17,3 +26,13 @@ cache-js/*
 
 # ignore any custom configurations
 /config.js
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS specific
+.DS_Store
+Thumbs.db
