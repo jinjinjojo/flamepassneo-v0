@@ -1,14 +1,14 @@
 {
-  "name": "flamepass",
-  "productName": "Flamepass",
+  "name": "flamepassneo",
+  "productName": "Flamepass Neo",
   "version": "1.0.0",
-  "description": "Web browser for school environments",
+  "description": "Enhanced web browser for school environments",
   "main": "app/main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-packager . Flamepass --platform=win32 --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.ico --asar=false --prune=true",
-    "build:linux": "electron-packager . Flamepass --platform=linux --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
-    "build:linux-arm": "electron-packager . Flamepass --platform=linux --arch=arm64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
+    "build:win": "electron-packager . \"Flamepass Neo\" --platform=win32 --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.ico --asar=false --prune=true",
+    "build:linux": "electron-packager . \"Flamepass Neo\" --platform=linux --arch=x64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
+    "build:linux-arm": "electron-packager . \"Flamepass Neo\" --platform=linux --arch=arm64 --out=dist --overwrite --icon=app/assets/img/logo.png --asar=false --prune=true",
     "build:all": "npm install && npm run build:win && npm run build:linux && npm run build:linux-arm"
   },
   "author": "CarbonBoys",
@@ -22,8 +22,8 @@
     "electron-packager": "^17.1.1"
   },
   "build": {
-    "appId": "com.flamepass.app",
-    "productName": "Flamepass",
+    "appId": "com.flamepassneo.app",
+    "productName": "Flamepass Neo",
     "files": [
       "app/**/*",
       "package.json"

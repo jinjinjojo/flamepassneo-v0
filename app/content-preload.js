@@ -7,5 +7,8 @@ contextBridge.exposeInMainWorld('electron', {
         return (callback) => {
             ipcRenderer.on(channel, (_, message) => callback(message));
         };
+    },
+    onErrorDetails: (callback) => {
+        ipcRenderer.on('error-details', (_, message) => callback(message));
     }
 });

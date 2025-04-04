@@ -75,7 +75,7 @@
         <div class="error-box">
             <div class="error-icon">⚠</div>
             <h1>Connection Error</h1>
-            <p>Unable to connect to Flamepass. Please check your internet connection and try again.</p>
+            <p>Unable to connect to Flamepass Neo. Please check your internet connection and try again.</p>
             <button class="retry-button" id="retry-button">Retry Connection</button>
         </div>
     </div>
@@ -84,6 +84,24 @@
         document.getElementById('retry-button').addEventListener('click', () => {
             window.electron.retryConnection();
         });
+        // Add this to the existing error.html in the script section at the bottom
+            document.addEventListener('DOMContentLoaded', () => {
+                window.electron.getStatusUpdates()((message) => {
+                    // Update the paragraph with the error message
+                    const errorText = document.querySelector('.error-box p');
+                    if (errorText && message.includes('Error:') || message.includes('Failed:')) {
+                        errorText.textContent = message;
+                    }
+                });
+
+                // Listen for specific error details
+                window.electron.onErrorDetails((errorDetails) => {
+                    const errorDetailsElement = document.createElement('pre');
+                    errorDetailsElement.className = 'error-details';
+                    errorDetailsElement.textContent = errorDetails;
+                    document.querySelector('.error-box').appendChild(errorDetailsElement);
+                });
+            });
     </script>
 </body>
 
