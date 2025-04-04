@@ -1,31 +1,44 @@
-const { app, BrowserWindow, BrowserView, ipcMain } = require('electron');
+// Optimized app/main.js
+
+const { app, BrowserWindow, BrowserView, ipcMain, protocol } = require('electron');
 const path = require('path');
-const isDev = require('electron-is-dev');
-const childProcess = require('child_process');
 const fs = require('fs');
-const http = require('http');
-const ProxyManager = require('./proxy-manager');
+const https = require('https');
+const { promisify } = require('util');
+const AdmZip = require('adm-zip');
 
 // Keep a global reference of the window object
 let mainWindow;
 let contentView;
-let serverProcess;
-const PORT = 8080;
-let proxyManager;
 let isRetrying = false;
-const TITLE_BAR_HEIGHT = 40; // Height of our custom title bar
+const TITLE_BAR_HEIGHT = 40; // Height of custom title bar
 
-// Create necessary directories if they don't exist
-function ensureDirsExist() {
-    const dirs = ['sessions', 'cache-js'];
-    dirs.forEach(dir => {
-        const dirPath = path.join(__dirname, '..', dir);
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
+// Get the app directory (where the exe is located)
+const getAppDir = () => {
+    return process.env.PORTABLE_EXECUTABLE_DIR || app.getAppPath();
+};
+
+// Create or ensure repo directory exists
+function ensureRepoDirExists() {
+    try {
+        // Use a directory next to the executable
+        const repoDir = path.join(getAppDir(), 'repo');
+        if (!fs.existsSync(repoDir)) {
+            fs.mkdirSync(repoDir, { recursive: true });
         }
-    });
+        return repoDir;
+    } catch (e) {
+        console.error('Error creating repo directory:', e);
+        // Fallback to userData if we can't write to app directory
+        const repoDir = path.join(app.getPath('userData'), 'repo');
+        if (!fs.existsSync(repoDir)) {
+            fs.mkdirSync(repoDir, { recursive: true });
+        }
+        return repoDir;
+    }
 }
 
+// Window creation and setup
 function createWindow() {
     // Create the main window with just the title bar
     mainWindow = new BrowserWindow({
@@ -35,7 +48,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            webSecurity: false // Allow loading local content
         },
         icon: path.join(__dirname, 'assets/img/logo.png'),
         show: false,
@@ -50,7 +64,10 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            preload: path.join(__dirname, 'content-preload.js')
+            preload: path.join(__dirname, 'content-preload.js'),
+            webSecurity: false, // Allow loading local content
+            allowRunningInsecureContent: false,
+            partition: 'persist:flamepass'
         }
     });
 
@@ -99,11 +116,12 @@ function createWindow() {
         if (!isRetrying) {
             isRetrying = true;
             contentView.webContents.loadFile(path.join(__dirname, 'loading.html'));
-            startServer().catch(error => {
-                console.error('Retry failed:', error);
-                contentView.webContents.loadFile(path.join(__dirname, 'error.html'));
-                isRetrying = false;
-            });
+            loadContent()
+                .catch(error => {
+                    console.error('Retry failed:', error);
+                    contentView.webContents.loadFile(path.join(__dirname, 'error.html'));
+                    isRetrying = false;
+                });
         }
     });
 
@@ -127,159 +145,220 @@ function createWindow() {
         // Return the channel name so renderer can listen
         event.returnValue = statusChannel;
 
-        // Start the server setup process
-        buildRammerhead()
-            .then(() => {
-                sendUpdate('Starting proxy server...');
-                return startServer(sendUpdate);
-            })
+        // Start loading content
+        loadContent(sendUpdate)
             .catch(error => {
                 console.error('Setup failed:', error);
-                sendUpdate('Connection failed. Please retry.');
+                sendUpdate('Connection failed. Please retry. Error: ' + error.message);
             });
     });
 }
 
-// Helper function to check if server is ready
-async function waitForServerReady(port) {
-    const maxAttempts = 30;
-    const delay = 500;
+// Fast download using ZIP archive instead of individual files
+async function downloadRepositoryZip(repoName, branch, targetDir, statusCallback) {
+    const zipUrl = `https://github.com/${repoName}/archive/${branch}.zip`;
+    const zipPath = path.join(targetDir, 'repo.zip');
 
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-            await new Promise((resolve, reject) => {
-                const req = http.get(`http://localhost:${port}/needpassword`, (res) => {
-                    if (res.statusCode === 200) {
-                        resolve();
-                    } else {
-                        reject(new Error(`Server returned status code ${res.statusCode}`));
-                    }
-                });
+    statusCallback('Downloading repository archive...');
 
-                req.on('error', reject);
-                req.setTimeout(delay, () => reject(new Error('Request timeout')));
-            });
-
-            console.log('Server is ready!');
-            return;
-        } catch (error) {
-            console.log(`Waiting for server (attempt ${attempt + 1}/${maxAttempts})...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-    }
-
-    throw new Error('Server failed to start in a reasonable time');
-}
-
-async function buildRammerhead() {
     return new Promise((resolve, reject) => {
-        const buildProcess = childProcess.spawn('node', [path.join(__dirname, '../src/build.js')], {
-            cwd: path.join(__dirname, '..')
-        });
+        const file = fs.createWriteStream(zipPath);
 
-        buildProcess.stdout.on('data', (data) => {
-            console.log(`Build output: ${data}`);
-        });
-
-        buildProcess.stderr.on('data', (data) => {
-            console.error(`Build error: ${data}`);
-        });
-
-        buildProcess.on('close', (code) => {
-            if (code === 0) {
-                console.log('Rammerhead build successful');
-                resolve();
-            } else {
-                console.error(`Rammerhead build failed with code ${code}`);
-                reject(new Error(`Build process exited with code ${code}`));
+        https.get(zipUrl, (response) => {
+            if (response.statusCode !== 200) {
+                reject(new Error(`Failed to download ZIP: HTTP ${response.statusCode}`));
+                return;
             }
-        });
 
-        buildProcess.on('error', (error) => {
-            console.error('Failed to start build process:', error);
-            reject(error);
+            // Track download progress
+            const totalSize = parseInt(response.headers['content-length'] || '0');
+            let downloadedSize = 0;
+            let lastProgressReport = 0;
+
+            response.on('data', (chunk) => {
+                downloadedSize += chunk.length;
+
+                // Report progress at most every 250ms
+                const now = Date.now();
+                if (now - lastProgressReport > 250) {
+                    if (totalSize > 0) {
+                        const percent = Math.round((downloadedSize / totalSize) * 100);
+                        statusCallback(`Downloading: ${percent}% complete...`);
+                    } else {
+                        statusCallback(`Downloading: ${Math.round(downloadedSize / 1024)} KB...`);
+                    }
+                    lastProgressReport = now;
+                }
+            });
+
+            response.pipe(file);
+
+            file.on('finish', () => {
+                file.close();
+
+                statusCallback('Extracting files...');
+
+                try {
+                    // Extract ZIP using adm-zip for speed
+                    const zip = new AdmZip(zipPath);
+
+                    // Get the root folder name in the zip
+                    const rootFolder = zip.getEntries()[0].entryName.split('/')[0];
+
+                    // Extract everything
+                    zip.extractAllTo(targetDir, true);
+
+                    // Move files from subfolder to repo root
+                    const extractedPath = path.join(targetDir, rootFolder);
+                    const files = fs.readdirSync(extractedPath);
+
+                    for (const file of files) {
+                        const srcPath = path.join(extractedPath, file);
+                        const destPath = path.join(targetDir, file);
+
+                        // Use rename for moving (faster than copy+delete)
+                        if (fs.existsSync(destPath)) {
+                            // Remove existing file/directory first
+                            if (fs.statSync(destPath).isDirectory()) {
+                                fs.rmdirSync(destPath, { recursive: true });
+                            } else {
+                                fs.unlinkSync(destPath);
+                            }
+                        }
+                        fs.renameSync(srcPath, destPath);
+                    }
+
+                    // Clean up
+                    fs.rmdirSync(extractedPath, { recursive: true });
+                    fs.unlinkSync(zipPath);
+
+                    resolve();
+                } catch (err) {
+                    reject(err);
+                }
+            });
+
+            file.on('error', (err) => {
+                fs.unlink(zipPath, () => { });
+                reject(err);
+            });
+        }).on('error', (err) => {
+            fs.unlink(zipPath, () => { });
+            reject(err);
         });
     });
 }
 
-async function startServer(statusCallback = () => { }) {
+// Check if update is needed (once per day)
+async function shouldUpdate(targetDir) {
     try {
-        // Ensure directories exist
-        ensureDirsExist();
+        const timestampFile = path.join(targetDir, '.last_updated');
 
-        // Kill any existing server process
-        if (serverProcess) {
-            serverProcess.kill();
-            serverProcess = null;
+        // If the timestamp file doesn't exist or we can't read it, we should update
+        if (!fs.existsSync(timestampFile)) {
+            return true;
         }
 
-        // Start server with proper environment
-        statusCallback('Launching proxy server...');
-        serverProcess = childProcess.fork(path.join(__dirname, '../src/server.js'), [], {
-            env: {
-                ...process.env,
-                PORT: PORT.toString(),
-                NODE_PATH: path.join(__dirname, '..')
-            },
-            cwd: path.join(__dirname, '..')
-        });
+        const lastUpdated = parseInt(fs.readFileSync(timestampFile, 'utf8') || '0');
+        const now = Date.now();
 
-        // Handle server errors
-        serverProcess.on('error', (error) => {
-            console.error('Server error:', error);
-            statusCallback('Server error occurred.');
-            if (contentView && contentView.webContents) {
-                contentView.webContents.loadFile(path.join(__dirname, 'error.html'));
+        // Check if 24 hours have passed since last update
+        return (now - lastUpdated) > (24 * 60 * 60 * 1000);
+    } catch (err) {
+        console.error('Error checking update timestamp:', err);
+        return true; // Update if there's any issue checking
+    }
+}
+
+// Update the timestamp file
+function updateTimestamp(targetDir) {
+    try {
+        const timestampFile = path.join(targetDir, '.last_updated');
+        fs.writeFileSync(timestampFile, Date.now().toString());
+    } catch (err) {
+        console.error('Error updating timestamp:', err);
+    }
+}
+
+// Main function to load and display content
+async function loadContent(statusCallback = () => { }) {
+    try {
+        const repoDir = ensureRepoDirExists();
+        const repoName = 'jinjinjojo/flamepassapp-static';
+        const branch = 'main';
+
+        statusCallback('Checking for content updates...');
+
+        // Check if we need to update the repository
+        const needsUpdate = await shouldUpdate(repoDir);
+
+        if (needsUpdate || !fs.existsSync(path.join(repoDir, 'index.html'))) {
+            statusCallback('Downloading latest content...');
+
+            try {
+                // Fast ZIP download and extraction (much faster than individual files)
+                const startTime = Date.now();
+                await downloadRepositoryZip(repoName, branch, repoDir, statusCallback);
+                const endTime = Date.now();
+
+                statusCallback(`Download complete in ${((endTime - startTime) / 1000).toFixed(1)} seconds!`);
+                updateTimestamp(repoDir);
+            } catch (err) {
+                console.error('Error downloading content:', err);
+
+                // If download fails but we have existing content, use that
+                if (fs.existsSync(path.join(repoDir, 'index.html'))) {
+                    statusCallback('Using existing content...');
+                } else {
+                    throw err; // Re-throw if we have no content at all
+                }
             }
+        } else {
+            statusCallback('Using existing content...');
+        }
+
+        // Load the content
+        statusCallback('Loading Flamepass app...');
+        const indexPath = path.join(repoDir, 'index.html');
+
+        // Set base URL for relative resources
+        contentView.webContents.once('dom-ready', () => {
+            contentView.webContents.executeJavaScript(`
+        const base = document.createElement('base');
+        base.href = 'file://${repoDir.replace(/\\/g, '/')}/';
+        document.head.prepend(base);
+      `);
         });
 
-        // Wait for server to be ready
-        statusCallback('Waiting for server to initialize...');
-        await waitForServerReady(PORT);
-
-        // Initialize proxy manager
-        statusCallback('Creating secure session...');
-        proxyManager = new ProxyManager(`http://localhost:${PORT}`);
-
-        // Create a session with password
-        const sessionId = await proxyManager.createSession('sharkie4life');
-
-        // Enable shuffling for better obfuscation
-        statusCallback('Setting up secure connection...');
-        await proxyManager.editSession(sessionId, '', true);
-
-        const targetUrl = "https://app.flamepass.com";
-        const proxyUrl = `http://localhost:${PORT}/${sessionId}/${targetUrl}`;
-
-        // Now load the URL in our content view
-        statusCallback('Connecting to Flamepass...');
-        await contentView.webContents.loadURL(proxyUrl);
+        await contentView.webContents.loadFile(indexPath);
 
         isRetrying = false;
         return true;
     } catch (error) {
-        console.error('Failed to set up proxy:', error);
+        console.error('Failed to load content:', error);
+        statusCallback(`Failed: ${error.code || 'unknown'} - ${error.message || error}`);
+
         if (contentView && contentView.webContents) {
             contentView.webContents.loadFile(path.join(__dirname, 'error.html'));
         }
+
         isRetrying = false;
         throw error;
     }
 }
 
-function stopServer() {
-    if (serverProcess) {
-        serverProcess.kill();
-        serverProcess = null;
-    }
-}
+// Initialize the app
+app.whenReady().then(() => {
+    // Register file protocol handler (not strictly needed but adds flexibility)
+    protocol.registerFileProtocol('app', (request, callback) => {
+        const url = request.url.substr(6); // Remove 'app://'
+        callback({ path: path.normalize(`${getAppDir()}/${url}`) });
+    });
 
-app.on('ready', () => {
     createWindow();
 });
 
 app.on('window-all-closed', function () {
-    stopServer();
     app.quit();
 });
 

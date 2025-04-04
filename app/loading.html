@@ -116,6 +116,21 @@
                 content: ".";
             }
         }
+
+        .error-details {
+            margin-top: 20px;
+            background-color: rgba(222, 92, 52, 0.2);
+            border: 1px solid #de5c34;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 14px;
+            color: #ffffff;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
     </style>
 </head>
 
@@ -128,6 +143,7 @@
                 <div class="loading-bar"></div>
             </div>
             <div class="status-message" id="status-message">Initializing<span class="status-animation">...</span></div>
+            <pre class="error-details" id="error-details">No errors reported.</pre>
         </div>
     </div>
 
@@ -135,13 +151,30 @@
         // Listen for status updates
         window.electron.getStatusUpdates()((message) => {
             const statusElement = document.getElementById('status-message');
-            statusElement.textContent = message;
+            const errorDetailsElement = document.getElementById('error-details');
 
-            // Add back the animated dots
-            const dotsSpan = document.createElement('span');
-            dotsSpan.className = 'status-animation';
-            dotsSpan.textContent = '...';
-            statusElement.appendChild(dotsSpan);
+            // Check if the message indicates an error
+            if (message.includes('Error:') || message.includes('Failed:')) {
+                // Show error message in status
+                statusElement.textContent = "Connection failed. Please retry.";
+                statusElement.style.color = "#de5c34";
+
+                // Show detailed error message
+                errorDetailsElement.textContent = message;
+                errorDetailsElement.style.display = "block";
+
+                // Hide the loading animation
+                document.querySelector('.loading-bar-container').style.display = "none";
+            } else {
+                // Regular status update
+                statusElement.textContent = message;
+
+                // Add back the animated dots
+                const dotsSpan = document.createElement('span');
+                dotsSpan.className = 'status-animation';
+                dotsSpan.textContent = '...';
+                statusElement.appendChild(dotsSpan);
+            }
         });
     </script>
 </body>
